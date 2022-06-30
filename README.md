@@ -1,60 +1,45 @@
-# 👻 AAVE Analytics Dashboard - powered by [![Shippooor](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Follow%20%40Ixartz)](https://twitter.com/shippooor)
+# AAVE Analytics Dashboard
 
-### Features
+## Requirements
 
-Developer experience first:
+- Node.js 16+ and npm
 
-- ⚡ [Next.js](https://nextjs.org) for Static Site Generator
-- 🔥 Type checking [TypeScript](https://www.typescriptlang.org)
-- 💎 Integrate with [Tailwind CSS](https://tailwindcss.com)
-- ✅ Strict Mode for TypeScript and React 18
-- 📏 Linter with [ESLint](https://eslint.org) (default NextJS, NextJS Core Web Vitals, Tailwind CSS and Airbnb configuration)
-- 💖 Code Formatter with [Prettier](https://prettier.io)
-- 🦊 Husky for Git Hooks
-- 🚫 Lint-staged for running linters on Git staged files
-- 🚓 Lint git commit with Commitlint
-- 🦺 Testing with Jest and React Testing Library
-- 💡 Absolute Imports using `@` prefix
-- 🗂 VSCode configuration: Debug, Settings, Tasks and extension for PostCSS, ESLint, Prettier, TypeScript, Jest
-- 🤖 SEO metadata, JSON-LD and Open Graph tags with Next SEO
-- ⚙️ [Bundler Analyzer](https://www.npmjs.com/package/@next/bundle-analyzer)
-- 🖱️ One click deployment with Vercel or Netlify (or manual deployment to any hosting services)
-- 🌈 Include a FREE minimalist theme
-- 💯 Maximize lighthouse score
-
-Built-in feature from Next.js:
-
-- ☕ Minify HTML & CSS
-- 💨 Live reload
-- ✅ Cache busting
-
-### Philosophy
-
-- Minimal code
-- SEO-friendly
-- 🚀 Production-ready
-
-### Requirements
-
-- Node.js 14+ and npm
-
-### Getting started
-
-Run the following command on your local environment:
+Run the following command to install dependencies:
 
 ```shell
-git clone --depth=1 https://github.com/ShippooorDAO/aave-analytics-webapp aave-analytics-webapp
-cd aave-analytics-webapp
 npm install
 ```
 
-Then, you can run locally in development mode with live reload:
+## Running
+
+### Development
 
 ```shell
 npm run dev
 ```
 
-Open http://localhost:3000 with your favorite browser to see your project.
+Open http://localhost:3000
+
+### Production
+
+Insert Docker setup here
+
+```shell
+npm run build
+npm run start
+```
+
+## Testing
+
+All tests are colocated with the source code inside the same directory. So, it makes it easier to find them. Unfortunately, it is not possible with the `pages` folder which is used by Next.js for routing. So, what is why we have a `pages.test` folder to write tests from files located in `pages` folder.
+
+Tests can be ran with the following command:
+
+```shell
+npm run test
+```
+
+## Project structure
 
 ```shell
 .
@@ -75,51 +60,26 @@ Open http://localhost:3000 with your favorite browser to see your project.
 └── tsconfig.json                   # TypeScript configuration
 ```
 
-### Customization
+## Technical stack
 
-You can easily configure Next js Boilerplate. Please change the following file:
+- [Next.js](https://nextjs.org)
+- [TypeScript](https://www.typescriptlang.org)
+- [Tailwind CSS](https://tailwindcss.com) with [daisyUI](https://daisyui.com)
+- [ESLint](https://eslint.org)
+- [Prettier](https://prettier.io)
+- Testing with Jest and React Testing Library
+- SEO metadata, JSON-LD and Open Graph tags with Next SEO
 
-- `public/apple-touch-icon.png`, `public/favicon.ico`, `public/favicon-16x16.png` and `public/favicon-32x32.png`: your website favicon, you can generate from https://favicon.io/favicon-converter/
-- `src/styles/global.css`: your CSS file using Tailwind CSS
-- `src/utils/AppConfig.ts`: configuration file
-- `src/templates/Main.tsx`: default theme
+Comitting to this repository is done by following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard. It can be either prefixed by:
 
-### Deploy to production
-
-You can see the results locally in production mode with:
-
-```shell
-$ npm run build
-$ npm run start
+```
+feat:
+fix:
+docs:
+chore:
 ```
 
-The generated HTML and CSS files are minified (built-in feature from Next js). It will also removed unused CSS from [Tailwind CSS](https://tailwindcss.com).
-
-You can create an optimized production build with:
-
-```shell
-npm run build-prod
-```
-
-Now, your blog is ready to be deployed. All generated files are located at `out` folder, which you can deploy with any hosting service.
-
-### Testing
-
-All tests are colocated with the source code inside the same directory. So, it makes it easier to find them. Unfortunately, it is not possible with the `pages` folder which is used by Next.js for routing. So, what is why we have a `pages.test` folder to write tests from files located in `pages` folder.
-
-### Deploy to Netlify
-
-Clone this repository on own GitHub account and deploy to Netlify:
-
-[![Netlify Deploy button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ixartz/Next-js-Boilerplate)
-
-### Deploy to Vercel
-
-Deploy this Next JS Boilerplate on Vercel in one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fixartz%2FNext-js-Boilerplate)
-
-### VSCode information (optional)
+## VSCode information (optional)
 
 If you are VSCode users, you can have a better integration with VSCode by installing the suggested extension in `.vscode/extension.json`. The starter code comes up with Settings for a seamless integration with VSCode. The Debug configuration is also provided for frontend and backend debugging experience.
 
@@ -127,6 +87,8 @@ With the plugins installed on your VSCode, ESLint and Prettier can automatically
 
 Pro tips: if you need a project wide type checking with TypeScript, you can run a build with <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd> on Mac.
 
-### Contributions
+## License
 
-Everyone is welcome to contribute to this project. Feel free to open an issue if you have question or found a bug.
+Licensed under the MIT License, Copyright © 2022
+
+See [LICENSE](LICENSE) for more information.

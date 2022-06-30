@@ -1,5 +1,15 @@
 @tailwind base;
 
+html,
+body {
+  height: 100%;
+  font-size: 18px;
+}
+
+[data-reactroot] {
+  height: 100%;
+}
+
 a {
   @apply text-blue-700;
 }
