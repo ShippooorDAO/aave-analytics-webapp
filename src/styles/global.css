@@ -28,16 +28,21 @@ a:hover {
   @apply my-6;
 }
 
-.MuiDataGrid-root,
-.MuiFormControl-root,
-.MuiInput-root,
-.MuiDataGrid-footerContainer,
-.MuiTablePagination-root,
-.MuiSvgIcon-root {
+/**
+ * Material UI DataGrid
+ */
+.MuiDataGrid-root {
   @apply text-base-content border-base-content;
-}
+  .MuiFormControl-root,
+  .MuiInput-root,
+  .MuiDataGrid-footerContainer,
+  .MuiTablePagination-root,
+  .MuiSvgIcon-root {
+    @apply text-base-content border-base-content;
+  }
 
-.MuiInput-root::after,
-.MuiInput-root::before {
-  @apply border-accent-focus;
+  .MuiInput-root::after,
+  .MuiInput-root::before {
+    @apply border-accent-focus;
+  }
 }
