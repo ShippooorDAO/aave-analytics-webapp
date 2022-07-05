@@ -6,8 +6,8 @@ export const CountCard = ({
   amount: string;
 }) => {
   return (
-    <div>
-      <div>{title}</div>
+    <div className="bg-base-200 rounded-xl shadow-md p-2">
+      <div className="font-bold">{title}</div>
       <div>{amount}</div>
     </div>
   );

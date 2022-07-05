@@ -2,8 +2,8 @@ import { Token } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProvider';
 import { format } from '@/utils/Format';
 import { useState } from 'react';
-import { Button, Modal, Table } from 'react-daisyui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Button, Table } from 'react-daisyui';
+import TokenChip from './TokenChip';
 
 export const CurrencySelect = ({
   onSelect,
@@ -62,22 +62,26 @@ export const PriceOracleSimulatorPanel = () => {
 
   return (
     <>
-      <label htmlFor="my-modal" className="btn modal-button">
-        open modal
+      <label htmlFor="my-modal" className="btn btn-sm modal-button">
+        Simulate
       </label>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
-      <label htmlFor="my-modal" className="modal max-w-none">
-        <div className="modal-box max-w-none">
+      <div className="modal max-w-none">
+        <div className="modal-box max-w-none overflow-hidden">
+          <label
+            htmlFor="my-modal"
+            className="btn btn-sm btn-circle absolute right-2 top-2"
+          >
+            ✕
+          </label>
           <CurrencySelect
             onSelect={(token) => addToken(token)}
             excludes={simulatedTokens}
           />
           {simulatedTokens.length === 0 ? (
-            <article className="prose mx-auto">
-              <h4 className="text-center">
-                No simulation currently set up. Add token to start.
-              </h4>
-            </article>
+            <div className="text-center font-bold text-lg">
+              No simulation currently set up. Add token to start.
+            </div>
           ) : (
             <Table className="table w-full table-compact">
               <Table.Head>
@@ -90,7 +94,9 @@ export const PriceOracleSimulatorPanel = () => {
               <Table.Body>
                 {simulatedTokens.map((token: Token) => (
                   <Table.Row id={token.id}>
-                    <span>{token.symbol}</span>
+                    <span>
+                      <TokenChip token={token} />
+                    </span>
                     <span>
                       <input
                         type="text"
@@ -117,10 +123,10 @@ export const PriceOracleSimulatorPanel = () => {
                     </span>
                     <span>
                       <Button
-                        className="btn-secondary btn-circle btn-outline"
+                        className="btn-sm btn-secondary btn-circle btn-outline"
                         onClick={() => removeToken(token)}
                       >
-                        <CloseIcon />
+                        ✕
                       </Button>
                     </span>
                   </Table.Row>
@@ -135,7 +141,7 @@ export const PriceOracleSimulatorPanel = () => {
             </label>
           </div>
         </div>
-      </label>
+      </div>
     </>
   );
 };

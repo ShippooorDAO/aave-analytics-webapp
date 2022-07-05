@@ -19,6 +19,7 @@ type AaveTokenParametersProps = {
 };
 
 type AaveTokenTemplateProps = {
+  price: number;
   marketCap: number;
   fullyDilutedValuation: number;
   totalValueLocked: number;
@@ -30,6 +31,7 @@ type AaveTokenTemplateProps = {
 };
 
 function AaveTokenTemplate({
+  price,
   marketCap,
   fullyDilutedValuation,
   totalValueLocked,
@@ -40,9 +42,15 @@ function AaveTokenTemplate({
   maxSupply,
 }: AaveTokenTemplateProps) {
   return (
-    <>
-      <AaveTokenPriceChart />
-      <h2>AAVE</h2>
+    <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="col-span-2 bg-base-200 rounded-xl shadow-md p-2">
+        <div className="font-bold">Price over time</div>
+        <AaveTokenPriceChart />
+      </div>
+      <CountCard
+        title="Current Token Price"
+        amount={format(price, { symbol: 'USD' })}
+      />
       <CountCard
         title="Market Capitalization"
         amount={format(marketCap, { symbol: 'USD' })}
@@ -69,13 +77,14 @@ function AaveTokenTemplate({
       />
       <CountCard title="Total Supply" amount={format(totalSupply, {})} />
       <CountCard title="Max Supply" amount={format(maxSupply, {})} />
-    </>
+    </div>
   );
 }
 
 async function fetchAaveTokenParameters(client: CoinGecko) {
   const data = await client.coins.fetch('aave', {});
   const market = data.data.market_data;
+  const price = market.current_price.usd;
   const marketCap = market.market_cap.usd;
   const totalValueLocked = market.total_value_locked['usd'];
   const fullyDilutedValuation = market.fully_diluted_valuation.usd;
@@ -86,6 +95,7 @@ async function fetchAaveTokenParameters(client: CoinGecko) {
   const maxSupply = market.max_supply;
 
   return {
+    price,
     marketCap,
     totalValueLocked,
     fullyDilutedValuation,
@@ -132,14 +142,9 @@ const TokenIndex = () => {
         { title: 'AAVE Token', uri: '/token' },
       ]}
     >
-      <section
-        id="overview"
-        className="relative rounded-xl overflow-auto p-8 w-full h-full"
-      >
-        <div className="p-4 rounded-lg shadow-lg h-full">
-          <AaveToken />
-        </div>
-      </section>
+      <div className="p-4">
+        <AaveToken />
+      </div>
     </Main>
   );
 };

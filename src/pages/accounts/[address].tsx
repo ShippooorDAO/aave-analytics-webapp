@@ -3,7 +3,7 @@ import Main from '@/templates/Main';
 import { useRouter } from 'next/router';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import DefaultErrorPage from 'next/error';
-import { Badge, Button, Link } from 'react-daisyui';
+import { Button, Link } from 'react-daisyui';
 import TransactionsTable from '@/components/tables/Transactions';
 import PortfolioTable from '@/components/tables/Portfolio';
 import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProvider';
@@ -62,7 +62,7 @@ const AccountPage = () => {
               size={10}
               scale={4}
             />
-            <h3 className="inline">{address}</h3>
+            <span className="font-bold">{address}</span>
             <Link
               className="btn btn-circle btn-outline btn-sm inline"
               href={`https://etherscan.io/address/${address}`}
@@ -80,7 +80,7 @@ const AccountPage = () => {
             {account?.tag && <h3 className="inline">Tag: {account.tag}</h3>}
           </div>
           <div className="p-4 rounded-lg shadow-lg">
-            <div>
+            <div className="grid col-span-2 ">
               Account Value: {format(account?.accountValue, { symbol: 'USD' })}
             </div>
             <div>
@@ -91,17 +91,17 @@ const AccountPage = () => {
             <div>Loan to Value: {account?.ltv}</div>
           </div>
           <div className="p-4 rounded-lg shadow-lg col-span-2">
-            <h4 className="inline mr-5">Portfolio</h4>
+            <span className="font-bold mr-5">Portfolio</span>
             {account?.crossCurrencyRisk && (
               <div className="badge badge-warning">Has Cross-Currency Risk</div>
             )}
-            <div className="h-96 w-full">
+            <div className="h-96 w-full mt-3">
               <PortfolioTable positions={account?.positions} />
             </div>
           </div>
           <div className="p-4 rounded-lg shadow-lg col-span-2">
-            Transactions
-            <div className="h-96 w-full">
+            <span className="font-bold">Transactions</span>
+            <div className="h-96 w-full mt-3">
               <TransactionsTable accountId={address} />
             </div>
           </div>

@@ -9,6 +9,7 @@ import {
   YAxis,
 } from 'recharts';
 import CoinGecko from 'coingecko-api';
+import { format } from '@/utils/Format';
 
 type AaveTokenPricesProps = Array<Array<number>>;
 
@@ -36,12 +37,13 @@ const AaveTokenPriceChartTemplate = ({
   };
 
   return (
-    <>
-      <div className="btn-group" onChange={handleTimeWindow}>
+    <div className="flex flex-col items-end">
+      <div className="btn-group mb-2" onChange={handleTimeWindow}>
         {timeWindows.map((w, i) => (
           <input
             key={i}
             id={w}
+            checked={timeWindow === w}
             value={w}
             type="radio"
             name="options"
@@ -69,7 +71,12 @@ const AaveTokenPriceChartTemplate = ({
             }
           />
           <YAxis interval="preserveEnd" dx={3} type="number" mirror />
-          <Tooltip />
+          <Tooltip
+            labelFormatter={(label) => new Date(label * 1000).toLocaleString()}
+            formatter={(label: string) =>
+              format(label, { decimals: 2, symbol: 'USD' })
+            }
+          />
           <Area
             strokeWidth={3}
             type="monotone"
@@ -79,7 +86,7 @@ const AaveTokenPriceChartTemplate = ({
           />
         </AreaChart>
       </ResponsiveContainer>
-    </>
+    </div>
   );
 };
 
