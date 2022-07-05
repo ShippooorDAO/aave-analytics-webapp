@@ -8,6 +8,7 @@ import {
 import {
   AccountAddressRenderCell,
   AccountTagRenderCell,
+  HealthScoreRenderCell,
   PercentageGridValueFormatter,
 } from '@/utils/DataGrid';
 import { PriceOracleSimulatorPanel } from '../PriceOracleSimulatorPanel';
@@ -45,6 +46,13 @@ const columns: GridColDef[] = [
     field: 'collateralRatio',
     headerName: 'Collateral ratio',
     valueFormatter: PercentageGridValueFormatter,
+    width: 160,
+  },
+  {
+    field: 'healthScore',
+    headerName: 'Health score',
+    type: 'number',
+    renderCell: HealthScoreRenderCell,
     width: 160,
   },
   {

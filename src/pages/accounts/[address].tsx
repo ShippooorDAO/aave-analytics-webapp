@@ -13,6 +13,7 @@ import MockAccountQueryResponse from '@/shared/AaveAnalyticsApi/mocks/AccountQue
 import { Account } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { format, getAccountShorthand } from '@/utils/Format';
 import Blockies from 'react-blockies';
+import HealthFactorBadge from '@/components/HealthFactorBadge';
 
 const AccountPage = () => {
   const router = useRouter();
@@ -89,6 +90,12 @@ const AccountPage = () => {
             </div>
             <div>Collateral Ratio: {account?.collateralRatio}</div>
             <div>Loan to Value: {account?.ltv}</div>
+            <div>
+              Health Factor:{' '}
+              {account?.healthScore && (
+                <HealthFactorBadge healthFactor={account.healthScore} />
+              )}
+            </div>
           </div>
           <div className="p-4 rounded-lg shadow-lg col-span-2">
             <span className="font-bold mr-5">Portfolio</span>

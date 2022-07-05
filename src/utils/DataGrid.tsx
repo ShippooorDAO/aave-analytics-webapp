@@ -11,6 +11,7 @@ import { Badge } from 'react-daisyui';
 import Blockies from 'react-blockies';
 import { getAccountShorthand } from './Format';
 import { getIconUriForToken } from './Visuals';
+import HealthFactorBadge from '@/components/HealthFactorBadge';
 
 export function PercentageGridValueFormatter(
   params: GridValueFormatterParams<number>
@@ -55,6 +56,14 @@ export function TokenRenderCell(params: GridRenderCellParams<Token>) {
     );
   }
   return params.value.symbol;
+}
+
+export function HealthScoreRenderCell(params: GridRenderCellParams<number>) {
+  const healthScore = params.value;
+  if (!healthScore) {
+    return '';
+  }
+  return <HealthFactorBadge healthFactor={healthScore} />;
 }
 
 export function TokenAmountFormatter(

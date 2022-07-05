@@ -8,6 +8,7 @@
       "freeCollateral": "1554200000000000000000",
       "ltv": 0.3209,
       "collateralRatio": 3.0646,
+      "healthScore": 2.1,
       "crossCurrencyRisk": true
     },
     {
@@ -17,6 +18,7 @@
       "freeCollateral": "1554200000000000000000",
       "ltv": 0.3209,
       "collateralRatio": 3.0646,
+      "healthScore": 1.9,
       "crossCurrencyRisk": true
     },
     {
@@ -26,6 +28,7 @@
       "freeCollateral": "1554200000000000000000",
       "ltv": 0.3209,
       "collateralRatio": 3.0646,
+      "healthScore": 1.6,
       "crossCurrencyRisk": true
     },
     {
@@ -35,6 +38,7 @@
       "freeCollateral": "1554200000000000000000",
       "ltv": 0.3209,
       "collateralRatio": 3.0646,
+      "healthScore": 1.4,
       "crossCurrencyRisk": true
     },
     {
@@ -44,6 +48,7 @@
       "freeCollateral": "1554200000000000000000",
       "ltv": 0.3209,
       "collateralRatio": 3.0646,
+      "healthScore": 1.22,
       "crossCurrencyRisk": true
     },
     {
@@ -53,6 +58,7 @@
       "freeCollateral": "1554200000000000000000",
       "ltv": 0.3209,
       "collateralRatio": 3.0646,
+      "healthScore": 1.09,
       "crossCurrencyRisk": true
     }
   ]

@@ -20,6 +20,7 @@ export interface Account {
     ltv: number;
     collateralRatio: number;
     crossCurrencyRisk: boolean;
+    healthScore?: number;
     tag?: string;
     positions?: TokenAmount[];
 }
@@ -48,6 +49,7 @@ export interface AccountBaseResponse {
   freeCollateral: string;
   ltv: number;
   collateralRatio: number;
+  healthScore?: number;
   tag?: string;
   crossCurrencyRisk: boolean;
 }
