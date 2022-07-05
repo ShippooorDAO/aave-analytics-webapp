@@ -1,0 +1,14 @@
+{
+  "transactions": [
+    {
+      "id": "0x544337d52ec097803e6079a74ad85b478ff94f48860c6df1c991416617d8bd87",
+      "txHash": "0x544337d52ec097803e6079a74ad85b478ff94f48860c6df1c991416617d8bd87",
+      "txType": "borrow",
+      "tokenId": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "amount": "4530123000000000000000000",
+      "amountUSD": 452381.78,
+      "accountId": "0xda39e48523770197ef3cbb70c1bf1cccf9b4b1e7",
+      "timestamp": 1656950640
+    }
+  ]
+}

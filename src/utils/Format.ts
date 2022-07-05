@@ -4,18 +4,18 @@ import { BigNumber, utils } from 'ethers';
 
 const bigNumberDecimalPlaces = 18;
 
-function getAccountShorthand(account: string) {
-    return `${account.substring(0, 4)}...${account.substring(-1, -4)}`
+export function getAccountShorthand(account: string) {
+    return `${account.substring(0, 6)}...${account.substring(38,42)}`
 }
 function toExactString(n: BigNumber) {
     return utils.formatUnits(n, bigNumberDecimalPlaces);
 }
 
-function toDisplayString(n: BigNumber) {
+function toDisplayString(n: BigNumber, decimals: number) {
     const exactString = toExactString(n);
     const displayString = parseFloat(exactString).toLocaleString('en-US', {
-      minimumFractionDigits: bigNumberDecimalPlaces,
-      maximumFractionDigits: bigNumberDecimalPlaces,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
     });
 
     // If the return string is -0.00 or some variant, strip the negative
@@ -58,7 +58,7 @@ export function format(
       return `$${numberAbbreviate(value, decimals)}`;
     }
     if (value instanceof BigNumber) {
-      return `$${toDisplayString(value)}`;
+     return `$${toDisplayString(value, decimals)}`;
     }
     return value.toLocaleString(undefined, {
       style: 'currency',

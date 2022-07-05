@@ -127,6 +127,10 @@ const TokenIndex = () => {
           description="Deep dive analytics dashboard for AAVE"
         />
       }
+      breadcrumbs={[
+        { title: 'Overview', uri: '/' },
+        { title: 'AAVE Token', uri: '/token' },
+      ]}
     >
       <section
         id="overview"

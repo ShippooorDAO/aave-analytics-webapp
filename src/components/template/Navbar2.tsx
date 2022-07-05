@@ -1,7 +1,8 @@
 import { useTheme } from 'next-themes';
 import { ReactNode } from 'react';
-import DarkMode from '@mui/icons-material/DarkMode';
-import LightMode from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Navbar = ({ children }: { children: ReactNode }) => {
   const { setTheme, resolvedTheme } = useTheme();
@@ -13,19 +14,7 @@ const Navbar = ({ children }: { children: ReactNode }) => {
         <div className="w-full navbar bg-base-300">
           <div className="flex-none lg:hidden">
             <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block w-6 h-6 stroke-current"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>
-              </svg>
+              <MenuIcon />
             </label>
           </div>
           <div className="flex-1 px-2 mx-2">
@@ -55,7 +44,11 @@ const Navbar = ({ children }: { children: ReactNode }) => {
                     setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
                   }
                 >
-                  {resolvedTheme === 'light' ? <DarkMode /> : <LightMode />}
+                  {resolvedTheme === 'light' ? (
+                    <DarkModeIcon />
+                  ) : (
+                    <LightModeIcon />
+                  )}
                 </a>
               </li>
             </ul>

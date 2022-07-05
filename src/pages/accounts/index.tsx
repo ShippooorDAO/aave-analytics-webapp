@@ -11,14 +11,13 @@ const AccountsIndex = () => {
           description="Deep dive analytics dashboard for AAVE"
         />
       }
+      breadcrumbs={[
+        { title: 'Overview', uri: '/' },
+        { title: 'Accounts', uri: '/accounts' },
+      ]}
     >
-      <section
-        id="overview"
-        className="relative rounded-xl overflow-auto p-8 w-full h-full"
-      >
-        <div className="p-4 rounded-lg shadow-lg h-full">
-          <Accounts />
-        </div>
+      <section className="w-full h-full">
+        <Accounts />
       </section>
     </Main>
   );

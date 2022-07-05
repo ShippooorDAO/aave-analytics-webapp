@@ -1,10 +1,25 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { createContext, FC, ReactNode, useContext } from 'react';
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import Tokens from './Mocks/TokensQueryResponse.json';
 
-import { AaveAnalyticsApiProviderState } from './AaveAnalyticsApi.type';
-const AaveAnalyticsApiContext = createContext<AaveAnalyticsApiProviderState>(
-  {}
-);
+import { AaveAnalyticsApiProviderState, Token } from './AaveAnalyticsApi.type';
+import { parseTokenQueryResponse } from './AaveAnalyticsApiProcess';
+
+const missingProviderError =
+  'You forgot to wrap your code in a provider <EulerScanClientProvider>';
+
+const AaveAnalyticsApiContext = createContext<AaveAnalyticsApiProviderState>({
+  get tokens(): never {
+    throw new Error(missingProviderError);
+  },
+});
 
 interface AaveAnalyticsApiProviderProps {
   children: ReactNode;
@@ -21,8 +36,18 @@ export const AaveAnalyticsApiProvider: FC<AaveAnalyticsApiProviderProps> = ({
     cache: new InMemoryCache(),
   });
 
+  const [tokens, setTokens] = useState<Token[]>([]);
+
+  useEffect(() => {
+    setTokens(parseTokenQueryResponse(Tokens));
+  }, []);
+
   return (
-    <AaveAnalyticsApiContext.Provider value={{}}>
+    <AaveAnalyticsApiContext.Provider
+      value={{
+        tokens,
+      }}
+    >
       {children}
     </AaveAnalyticsApiContext.Provider>
   );

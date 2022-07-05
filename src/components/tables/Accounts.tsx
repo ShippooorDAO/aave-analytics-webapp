@@ -5,15 +5,27 @@ import {
   GridColDef,
   GridLinkOperator,
 } from '@mui/x-data-grid';
-import { PercentageGridValueFormatter } from '@/utils/DataGrid';
+import {
+  AccountAddressRenderCell,
+  AccountTagRenderCell,
+  PercentageGridValueFormatter,
+} from '@/utils/DataGrid';
+import { PriceOracleSimulatorPanel } from '../PriceOracleSimulatorPanel';
+import MockAccountsQueryResponse from '@/shared/AaveAnalyticsApi/mocks/AccountsQueryResponse.json';
+import { parseAccountsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
+import { Account } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 
 const columns: GridColDef[] = [
-  { field: 'address', headerName: 'Address', width: 300 },
+  {
+    field: 'address',
+    headerName: 'Address',
+    width: 300,
+    renderCell: AccountAddressRenderCell,
+  },
   {
     field: 'accountValue',
     headerName: 'Account value',
     type: 'number',
-
     width: 150,
   },
   {
@@ -40,83 +52,41 @@ const columns: GridColDef[] = [
     headerName: 'Cross-currency risk',
     width: 160,
   },
-];
-
-const rows = [
   {
-    id: '0x10bf1dcb5ab7860bab1c3320163c6dddf8dcc0e4',
-    address: '0x10bf1dcb5ab7860bab1c3320163c6dddf8dcc0e4',
-    accountValue: 21949362.71,
-    freeCollateral: 15542.53,
-    ltv: 0.3209,
-    collateralRatio: 3.0646,
-    crossCurrencyRisk: true,
-  },
-  {
-    id: '0x513ea9319e98713f25a387c2ca66d625b57495d6',
-    address: '0x013ea9319e98713f25a387c2ca66d625b57495d6',
-    accountValue: 21949362.71,
-    freeCollateral: 15542.53,
-    ltv: 0.3209,
-    collateralRatio: 3.0646,
-    crossCurrencyRisk: true,
-  },
-  {
-    id: '0x413ea9319e98713f25a387c2ca66d625b57495d6',
-    address: '0x10bf1dcb5ab7860bab1c3320163c6dddf8dcc0e4',
-    accountValue: 21949362.71,
-    freeCollateral: 15542.53,
-    ltv: 0.3209,
-    collateralRatio: 3.0646,
-    crossCurrencyRisk: true,
-  },
-  {
-    id: '0x113ea9319e98713f25a387c2ca66d625b57495d6',
-    address: '0x10bf1dcb5ab7860bab1c3320163c6dddf8dcc0e4',
-    accountValue: 21949362.71,
-    freeCollateral: 15542.53,
-    ltv: 0.3209,
-    collateralRatio: 3.0646,
-    crossCurrencyRisk: true,
-  },
-  {
-    id: '0x213ea9319e98713f25a387c2ca66d625b57495d6',
-    address: '0x10bf1dcb5ab7860bab1c3320163c6dddf8dcc0e4',
-    accountValue: 21949362.71,
-    freeCollateral: 15542.53,
-    ltv: 0.3209,
-    collateralRatio: 3.0646,
-    crossCurrencyRisk: true,
-  },
-  {
-    id: '0x313ea9319e98713f25a387c2ca66d625b57495d6',
-    address: '0x10bf1dcb5ab7860bab1c3320163c6dddf8dcc0e4',
-    accountValue: 21949362.71,
-    freeCollateral: 15542.53,
-    ltv: 0.3209,
-    collateralRatio: 3.0646,
-    crossCurrencyRisk: true,
+    field: 'tag',
+    headerName: 'Tag',
+    width: 160,
+    renderCell: AccountTagRenderCell,
   },
 ];
 
 function QuickSearchToolbar() {
   return (
-    <GridToolbarQuickFilter
-      quickFilterParser={(searchInput: string) =>
-        searchInput
-          .split(',')
-          .map((value) => value.trim())
-          .filter((value) => value !== '')
-      }
-    />
+    <div className="pl-4 pt-4 pr-4 flex gap-4 justify-between">
+      <GridToolbarQuickFilter
+        quickFilterParser={(searchInput: string) =>
+          searchInput
+            .split(',')
+            .map((value) => value.trim())
+            .filter((value) => value !== '')
+        }
+      />
+      <PriceOracleSimulatorPanel />
+    </div>
   );
 }
 
-export default function QuickFilteringCustomizedGrid() {
+export default function AccountsTable() {
+  const rows = parseAccountsQueryResponse(MockAccountsQueryResponse);
+  const openAccount = (account: Account) => {
+    window.open(`/accounts/${account.id}`, '_blank');
+  };
+
   return (
     <DataGrid
       rows={rows}
       columns={columns}
+      onRowClick={({ row }) => openAccount(row)}
       initialState={{
         filter: {
           filterModel: {

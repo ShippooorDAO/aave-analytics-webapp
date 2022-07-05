@@ -10,6 +10,10 @@ const LiquidationsIndex = () => {
           description="Deep dive analytics dashboard for AAVE"
         />
       }
+      breadcrumbs={[
+        { title: 'Overview', uri: '/' },
+        { title: 'Liquidations', uri: '/liquidations' },
+      ]}
     >
       <section
         id="overview"
