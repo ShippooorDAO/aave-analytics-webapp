@@ -13,6 +13,7 @@ import { getAccountShorthand } from './Format';
 import { getIconForSymbol } from './Visuals';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
 import { CurrencyAmount } from '@/shared/CurrencyAmount';
+import Link from 'next/link';
 
 export function PercentageGridValueFormatter(
   params: GridValueFormatterParams<number>
@@ -83,15 +84,17 @@ export function AccountAddressRenderCell(params: GridRenderCellParams<string>) {
     return '';
   }
   return (
-    <>
-      <Blockies
-        className="m-4 rounded-full inline"
-        seed={params.value}
-        size={10}
-        scale={4}
-      />
-      <span>{getAccountShorthand(params.value)}</span>
-    </>
+    <Link href={`/accounts/${params.value}`}>
+      <div className="cursor-pointer">
+        <Blockies
+          className="m-3 ml-0 rounded-full inline"
+          seed={params.value}
+          size={10}
+          scale={4}
+        />
+        <span>{getAccountShorthand(params.value)}</span>
+      </div>
+    </Link>
   );
 }
 

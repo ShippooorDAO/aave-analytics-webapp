@@ -6,7 +6,8 @@ import {
   GridLinkOperator,
 } from '@mui/x-data-grid';
 import {
-  TokenAmountFormatter,
+  AccountAddressRenderCell,
+  AmountFormatter,
   TokenRenderCell,
   TransactionTypeFormatter,
 } from '@/utils/DataGrid';
@@ -23,35 +24,57 @@ import NoRowsOverlay from './NoRowsOverlay';
 
 const columns: GridColDef[] = [
   {
-    field: 'txType',
-    headerName: 'Type',
-    valueFormatter: TransactionTypeFormatter,
-    type: 'number',
-    width: 150,
+    field: 'timestamp',
+    type: 'date',
+    headerName: 'Timestamp',
+    width: 160,
+  },
+  {
+    field: 'accountId',
+    headerName: 'Account',
+    renderCell: AccountAddressRenderCell,
+    type: 'string',
+    width: 220,
+  },
+  {
+    field: 'liquidatedAccountId',
+    headerName: 'Liquidated Account',
+    renderCell: AccountAddressRenderCell,
+    type: 'string',
+    width: 220,
   },
   {
     field: 'token',
     headerName: 'Token',
-    valueGetter: (p) => p.row.tokenAmount.token,
+    valueGetter: (p) => p.row.amount.token,
     renderCell: TokenRenderCell,
     width: 110,
   },
   {
-    field: 'tokenAmount',
+    field: 'amount',
     headerName: 'Amount',
-    valueFormatter: TokenAmountFormatter,
+    valueFormatter: AmountFormatter,
     width: 160,
   },
   {
     field: 'amountUsd',
     type: 'number',
-    headerName: 'Amount USD',
+    headerName: 'Amount (USD)',
+    valueFormatter: AmountFormatter,
     width: 160,
   },
   {
-    field: 'timestamp',
-    type: 'date',
-    headerName: 'Timestamp',
+    field: 'penaltyPaid',
+    type: 'number',
+    headerName: 'Penalty paid',
+    valueFormatter: AmountFormatter,
+    width: 160,
+  },
+  {
+    field: 'penaltyPaidUsd',
+    type: 'number',
+    headerName: 'Penalty paid (USD)',
+    valueFormatter: AmountFormatter,
     width: 160,
   },
 ];
@@ -97,6 +120,7 @@ export default function LiquidationsTable() {
       rows={rows || []}
       columns={columns}
       onRowClick={({ row }) => openTransaction(row)}
+      getRowClassName={() => 'cursor-pointer'}
       loading={loading}
       initialState={{
         filter: {
