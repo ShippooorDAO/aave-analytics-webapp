@@ -186,9 +186,10 @@ export const PriceOracleSimulatorPanel = () => {
               ✕
             </button>
           </span>
-          <div className="grid gap-5 grid-flow-col p-3 rounded-xl border-neutral border-2">
-            {Array.from(simulatedPriceOracles.values()).map(
-              ({ token, price }) => (
+          <div className="grid gap-3 grid-flow-col p-3 rounded-xl border-neutral border-2">
+            {Array.from(simulatedPriceOracles.values())
+              .slice(0, 3)
+              .map(({ token, price }) => (
                 <Badge className="h-8 pl-1 badge-outline">
                   <a
                     onClick={() => clearTokenSimulation(token)}
@@ -199,7 +200,14 @@ export const PriceOracleSimulatorPanel = () => {
                   {token.symbol}{' '}
                   {format(price, { abbreviate: true, symbol: 'USD' })}
                 </Badge>
-              )
+              ))}
+            {simulatedPriceOracles.size > 3 && (
+              <label
+                htmlFor="my-modal"
+                className="btn btn-ghost btn-circle btn-sm modal-button font-bold"
+              >
+                ⋯
+              </label>
             )}
           </div>
         </div>
