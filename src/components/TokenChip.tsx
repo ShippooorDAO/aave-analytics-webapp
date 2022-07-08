@@ -1,12 +1,13 @@
 import { Token } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
-import { getIconUriForToken } from '@/utils/Visuals';
+import { getIconForSymbol } from '@/utils/Visuals';
 import { Badge } from 'react-daisyui';
+import { CurrencyIcon } from './CurrencyIcon';
 
 export function TokenChip({ token }: { token: Token }) {
-  const iconImageUri = getIconUriForToken(token.id);
+  const iconImageUri = getIconForSymbol(token.symbol.toLowerCase());
   return (
-    <Badge className="badge-outline h-8">
-      {iconImageUri && <img className="h-6 mr-3" src={iconImageUri} />}
+    <Badge className="badge-outline h-8 pl-1">
+      {iconImageUri && <CurrencyIcon className="h-6 mr-3" token={token} />}
       <span>{token.symbol}</span>
     </Badge>
   );

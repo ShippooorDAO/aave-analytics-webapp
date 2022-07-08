@@ -10,8 +10,9 @@ import {
 import { Badge } from 'react-daisyui';
 import Blockies from 'react-blockies';
 import { getAccountShorthand } from './Format';
-import { getIconUriForToken } from './Visuals';
+import { getIconForSymbol } from './Visuals';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
+import { CurrencyAmount } from '@/shared/CurrencyAmount';
 
 export function PercentageGridValueFormatter(
   params: GridValueFormatterParams<number>
@@ -37,6 +38,8 @@ export function TransactionTypeFormatter(
       return 'Deposit';
     case TransactionType.REPAY:
       return 'Repay';
+    case TransactionType.LIQUIDATE:
+      return 'Liquidate';
     default:
       return 'Unknown';
   }
@@ -46,7 +49,7 @@ export function TokenRenderCell(params: GridRenderCellParams<Token>) {
   if (!params.value) {
     return 'Unknown';
   }
-  const iconImageUri = getIconUriForToken(params.value.id);
+  const iconImageUri = getIconForSymbol(params.value.symbol.toLowerCase());
   if (iconImageUri) {
     return (
       <Badge className="badge-outline h-8">
@@ -66,8 +69,8 @@ export function HealthScoreRenderCell(params: GridRenderCellParams<number>) {
   return <HealthFactorBadge healthFactor={healthScore} />;
 }
 
-export function TokenAmountFormatter(
-  params: GridValueFormatterParams<TokenAmount>
+export function AmountFormatter(
+  params: GridValueFormatterParams<CurrencyAmount>
 ) {
   if (!params.value) {
     return '';

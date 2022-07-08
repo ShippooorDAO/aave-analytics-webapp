@@ -6,16 +6,13 @@ import {
   GridLinkOperator,
 } from '@mui/x-data-grid';
 import {
-  TokenAmountFormatter,
+  AmountFormatter,
   TokenRenderCell,
   TransactionTypeFormatter,
 } from '@/utils/DataGrid';
 import MockTransactionsQueryResponse from '@/shared/AaveAnalyticsApi/mocks/TransactionsQueryResponse.json';
 import { parseTransactionsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
-import {
-  Account,
-  Transaction,
-} from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
+import { Transaction } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { useEffect, useState } from 'react';
 import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProvider';
 import { LinearProgress } from '@mui/material';
@@ -30,22 +27,22 @@ const columns: GridColDef[] = [
     width: 150,
   },
   {
-    field: 'token',
+    field: 'tokenId',
     headerName: 'Token',
-    valueGetter: (p) => p.row.tokenAmount.token,
+    valueGetter: (p) => p.row.amount.token,
     renderCell: TokenRenderCell,
     width: 110,
   },
   {
-    field: 'tokenAmount',
+    field: 'amount',
     headerName: 'Amount',
-    valueFormatter: TokenAmountFormatter,
+    valueFormatter: AmountFormatter,
     width: 160,
   },
   {
-    field: 'amountUSD',
-    type: 'number',
+    field: 'amountUsd',
     headerName: 'Amount USD',
+    valueFormatter: AmountFormatter,
     width: 160,
   },
   {
@@ -103,6 +100,7 @@ export default function TransactionsTable({
       rows={rows || []}
       columns={columns}
       onRowClick={({ row }) => openTransaction(row)}
+      getRowClassName={() => 'cursor-pointer'}
       loading={loading}
       initialState={{
         filter: {

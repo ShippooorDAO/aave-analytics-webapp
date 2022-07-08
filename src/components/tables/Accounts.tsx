@@ -8,6 +8,7 @@ import {
 import {
   AccountAddressRenderCell,
   AccountTagRenderCell,
+  AmountFormatter,
   HealthScoreRenderCell,
   PercentageGridValueFormatter,
 } from '@/utils/DataGrid';
@@ -20,19 +21,19 @@ const columns: GridColDef[] = [
   {
     field: 'address',
     headerName: 'Address',
-    width: 300,
+    width: 200,
     renderCell: AccountAddressRenderCell,
   },
   {
-    field: 'accountValue',
+    field: 'accountValueUsd',
     headerName: 'Account value',
-    type: 'number',
+    valueFormatter: AmountFormatter,
     width: 150,
   },
   {
-    field: 'freeCollateral',
+    field: 'freeCollateralUsd',
     headerName: 'Free collateral',
-    type: 'number',
+    valueFormatter: AmountFormatter,
     width: 150,
   },
   {
@@ -58,6 +59,7 @@ const columns: GridColDef[] = [
   {
     field: 'crossCurrencyRisk',
     headerName: 'Cross-currency risk',
+    type: 'boolean',
     width: 160,
   },
   {
@@ -95,6 +97,7 @@ export default function AccountsTable() {
       rows={rows}
       columns={columns}
       onRowClick={({ row }) => openAccount(row)}
+      getRowClassName={() => 'cursor-pointer'}
       initialState={{
         filter: {
           filterModel: {

@@ -5,23 +5,54 @@ import {
   GridColDef,
   GridLinkOperator,
 } from '@mui/x-data-grid';
-import MockAccountsQueryResponse from '@/shared/AaveAnalyticsApi/mocks/AccountsQueryResponse.json';
-import { parseAccountsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
+import {
+  TokenAmountFormatter,
+  TokenRenderCell,
+  TransactionTypeFormatter,
+} from '@/utils/DataGrid';
+import MockLiquidationsQueryResponse from '@/shared/AaveAnalyticsApi/mocks/LiquidationsQueryResponse.json';
+import { parseLiquidationsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
+import {
+  Liquidation,
+  Transaction,
+} from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
+import { useEffect, useState } from 'react';
+import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProvider';
+import { LinearProgress } from '@mui/material';
+import NoRowsOverlay from './NoRowsOverlay';
 
 const columns: GridColDef[] = [
-  { field: 'address', headerName: 'Address', width: 300 },
-  { field: 'liquidatorAddress', headerName: 'Liquidator address', width: 300 },
   {
-    field: 'amountLiquidated',
-    headerName: 'Amount liquidated',
+    field: 'txType',
+    headerName: 'Type',
+    valueFormatter: TransactionTypeFormatter,
     type: 'number',
     width: 150,
   },
   {
-    field: 'penaltyPaid',
-    headerName: 'Penalty paid',
+    field: 'token',
+    headerName: 'Token',
+    valueGetter: (p) => p.row.tokenAmount.token,
+    renderCell: TokenRenderCell,
+    width: 110,
+  },
+  {
+    field: 'tokenAmount',
+    headerName: 'Amount',
+    valueFormatter: TokenAmountFormatter,
+    width: 160,
+  },
+  {
+    field: 'amountUsd',
     type: 'number',
-    width: 150,
+    headerName: 'Amount USD',
+    width: 160,
+  },
+  {
+    field: 'timestamp',
+    type: 'date',
+    headerName: 'Timestamp',
+    width: 160,
   },
 ];
 
@@ -40,13 +71,33 @@ function QuickSearchToolbar() {
   );
 }
 
-export default function QuickFilteringCustomizedGrid() {
-  const rows = parseAccountsQueryResponse(MockAccountsQueryResponse);
+const NoTransactionsOverlay = () => <NoRowsOverlay text="No liquidations" />;
+
+export default function LiquidationsTable() {
+  const [liquidations, setLiquidations] = useState<Liquidation[] | null>(null);
+  const { tokens } = useAaveAnalyticsApiContext();
+  const loading = liquidations === null;
+
+  useEffect(() => {
+    if (tokens.length > 0) {
+      setLiquidations(
+        parseLiquidationsQueryResponse(MockLiquidationsQueryResponse, tokens)
+      );
+    }
+  }, [tokens]);
+
+  const openTransaction = (transaction: Transaction) => {
+    window.open(`https://etherscan.io/tx/${transaction.id}`, '_blank');
+  };
+
+  const rows = liquidations;
 
   return (
     <DataGrid
-      rows={rows}
+      rows={rows || []}
       columns={columns}
+      onRowClick={({ row }) => openTransaction(row)}
+      loading={loading}
       initialState={{
         filter: {
           filterModel: {
@@ -55,7 +106,11 @@ export default function QuickFilteringCustomizedGrid() {
           },
         },
       }}
-      components={{ Toolbar: QuickSearchToolbar }}
+      components={{
+        Toolbar: QuickSearchToolbar,
+        LoadingOverlay: LinearProgress,
+        NoRowsOverlay: NoTransactionsOverlay,
+      }}
     />
   );
 }

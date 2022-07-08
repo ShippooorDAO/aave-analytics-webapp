@@ -9,3 +9,7 @@ export function getIconUriForToken(tokenId: string): string | null {
   }
   return null;
 }
+
+export function getIconForSymbol(symbol: string): string {
+  return `/assets/images/tokens/${symbol}.svg`;
+}

@@ -4,23 +4,27 @@ import { SimulatedPriceOracle } from '@/shared/SimulatedPriceOracle/SimulatedPri
 import { useSimulatedPriceOracleContext } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
 import { format } from '@/utils/Format';
 import { useState } from 'react';
-import { Badge, Button, Table, Toggle } from 'react-daisyui';
+import { Badge, Button, Table } from 'react-daisyui';
 import TokenChip from './TokenChip';
+import Select from 'react-select';
+import NoRowsOverlay from './tables/NoRowsOverlay';
 
 export const CurrencySelect = ({
   onSelect,
   excludes,
+  className,
+  ...rest
 }: {
   onSelect: (token: Token) => void;
   excludes?: Token[];
-}) => {
+} & React.HTMLAttributes<HTMLDivElement>) => {
   const { tokens } = useAaveAnalyticsApiContext();
   const filteredTokens = tokens.filter(
     (token) => !(excludes || []).includes(token)
   );
 
   return (
-    <div className="dropdown">
+    <div className={`dropdown ${className || ''}`} {...rest}>
       <label
         tabIndex={0}
         className={
@@ -41,6 +45,50 @@ export const CurrencySelect = ({
         ))}
       </ul>
     </div>
+  );
+};
+
+export const CurrencySelect2 = ({
+  onSelect,
+  excludes,
+}: {
+  onSelect: (token: Token) => void;
+  excludes?: Token[];
+  className?: string;
+}) => {
+  const { tokens } = useAaveAnalyticsApiContext();
+  const filteredTokens = tokens.filter(
+    (token) => !(excludes || []).includes(token)
+  );
+
+  const options = filteredTokens.map((token: Token) => ({
+    value: token.id,
+    label: token.symbol,
+  }));
+
+  return (
+    <Select
+      classNamePrefix="react-select"
+      onChange={(entry) => {
+        const token = filteredTokens.find((t) => t.id === entry?.value);
+        if (token) {
+          onSelect(token);
+        }
+      }}
+      controlShouldRenderValue={false}
+      options={options}
+      isSearchable={true}
+      closeMenuOnSelect={false}
+      maxMenuHeight={200}
+      placeholder="Search token..."
+      formatOptionLabel={({ value }) => {
+        const token = filteredTokens.find((t) => t.id === value);
+        if (token) {
+          return <TokenChip token={token} />;
+        }
+        return '';
+      }}
+    />
   );
 };
 
@@ -163,26 +211,26 @@ export const PriceOracleSimulatorPanel = () => {
         Run simulation
       </label>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
-      <div className="modal max-w-none">
-        <div className="modal-box max-w-none overflow-hidden">
+      <div className="modal max-w-none min-h-96 ">
+        <div className="modal-box max-w-none moverflow-hidden">
           <label
             htmlFor="my-modal"
             className="btn btn-sm btn-circle absolute right-2 top-2  "
           >
             ✕
           </label>
-          <CurrencySelect
-            onSelect={(token) => addToken(token)}
-            excludes={simulatedTokens}
-          />
+          <div className="w-56 mb-2">
+            <CurrencySelect2
+              onSelect={(token) => addToken(token)}
+              excludes={simulatedTokens}
+            />
+          </div>
           {simulatedTokens.length === 0 ? (
-            <div className="text-center font-bold col-span-2">
-              No simulation currently set up. Add token to start.
-            </div>
+            <NoRowsOverlay text="Add token to start" />
           ) : (
-            <Table className=" table w-full table-compact col-span-2">
+            <Table className="table w-full table-compact col-span-2">
               <Table.Head>
-                <span>Symbol</span>
+                <span className="z-0">Symbol</span>
                 <span>Current Price</span>
                 <span>Simulated Price</span>
                 <span></span>
@@ -190,14 +238,14 @@ export const PriceOracleSimulatorPanel = () => {
               <Table.Body>
                 {simulatedTokens.map((token: Token) => (
                   <Table.Row id={token.id}>
-                    <span>
+                    <span className="z-0">
                       <TokenChip token={token} />
                     </span>
                     <span>
                       <input
                         type="text"
                         className="input input-bordered w-50 max-w-xs"
-                        value={format(token.priceUsd, { symbol: 'USD' })}
+                        value={token.priceUsd.toDisplayString()}
                         disabled
                       />
                     </span>

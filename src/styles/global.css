@@ -47,3 +47,11 @@ a:hover {
     @apply border-accent-focus;
   }
 }
+
+.react-select__control {
+  @apply rounded-xl cursor-text;
+}
+
+.react-select__menu {
+  @apply z-50;
+}

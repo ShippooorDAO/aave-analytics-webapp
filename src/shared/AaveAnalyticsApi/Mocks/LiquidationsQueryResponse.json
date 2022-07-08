@@ -1,3 +1,17 @@
 {
-  "transactions": []
+  "liquidations": [
+    {
+      "id": "0x544337d52ec097803e6079a74ad85b478ff94f48860c6df1c991416617d8bd87",
+      "txHash": "0x544337d52ec097803e6079a74ad85b478ff94f48860c6df1c991416617d8bd87",
+      "txType": "liquidate",
+      "tokenId": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "amount": "4530123000000000000000000",
+      "amountUsd": "4530123000000000000000000",
+      "penaltyPaid": "45301230000000000000000",
+      "penaltyPaidUsd": "45301230000000000000000",
+      "accountId": "0xda39e48523770197ef3cbb70c1bf1cccf9b4b1e7",
+      "liquidatedAccountId": "0x113ea9319e98713f25a387c2ca66d625b57495d6",
+      "timestamp": 1656950640
+    }
+  ]
 }

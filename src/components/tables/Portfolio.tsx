@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { TokenAmountFormatter, TokenRenderCell } from '@/utils/DataGrid';
+import { AmountFormatter, TokenRenderCell } from '@/utils/DataGrid';
 import { LinearProgress } from '@mui/material';
 import NoRowsOverlay from './NoRowsOverlay';
-import TokenAmount from '@/shared/TokenAmount';
+import { TokenAmount } from '@/shared/TokenAmount';
 
 const columns: GridColDef[] = [
   {
@@ -17,7 +17,7 @@ const columns: GridColDef[] = [
     field: 'tokenAmount',
     headerName: 'Amount',
     valueGetter: (p) => p.row,
-    valueFormatter: TokenAmountFormatter,
+    valueFormatter: AmountFormatter,
     width: 160,
   },
 ];

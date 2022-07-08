@@ -16,7 +16,7 @@ const SimulatedPriceOracleContext =
     get setSimulatedPriceOracles(): never {
       throw new Error(missingProviderError);
     },
-    get resetSimulatedPriceOracles(): never {
+    get clearSimulatedPriceOracles(): never {
       throw new Error(missingProviderError);
     },
   });
@@ -32,17 +32,17 @@ export const SimulatedPriceOracleProvider: FC<
   SimulatedPriceOracleProviderProps
 > = ({ children }: SimulatedPriceOracleProviderProps) => {
   const [simulatedPriceOracles, setSimulatedPriceOracles] = useState<
-    SimulatedPriceOracle[]
-  >([]);
+    Map<string, SimulatedPriceOracle>
+  >(new Map<string, SimulatedPriceOracle>());
 
-  const resetSimulatedPriceOracles = () => {
-    setSimulatedPriceOracles([]);
+  const clearSimulatedPriceOracles = () => {
+    setSimulatedPriceOracles(new Map<string, SimulatedPriceOracle>());
   };
 
   return (
     <SimulatedPriceOracleContext.Provider
       value={{
-        resetSimulatedPriceOracles,
+        clearSimulatedPriceOracles,
         setSimulatedPriceOracles,
         simulatedPriceOracles,
       }}

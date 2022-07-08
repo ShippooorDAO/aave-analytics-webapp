@@ -1,13 +1,12 @@
-import {BigNumber} from 'ethers';
+import { Token } from "../AaveAnalyticsApi/AaveAnalyticsApi.type";
 
 export interface SimulatedPriceOracle {
-    fromAsset: string;
-    toAsset: string;
-    rate: BigNumber;
+    token: Token;
+    price: number;
 }
 
 export interface SimulatedPriceOracleProviderState {
-  simulatedPriceOracles: SimulatedPriceOracle[];
-  setSimulatedPriceOracles: (priceOracles: SimulatedPriceOracle[]) => void;
-  resetSimulatedPriceOracles: () => void;
+  simulatedPriceOracles: Map<string, SimulatedPriceOracle>;
+  setSimulatedPriceOracles: (priceOracles: Map<string, SimulatedPriceOracle>) => void;
+  clearSimulatedPriceOracles: () => void;
 }

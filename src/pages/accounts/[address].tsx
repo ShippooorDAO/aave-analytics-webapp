@@ -14,6 +14,7 @@ import { Account } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { format, getAccountShorthand } from '@/utils/Format';
 import Blockies from 'react-blockies';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
+import { PriceOracleSimulatorPanel } from '@/components/PriceOracleSimulatorPanel';
 
 const AccountPage = () => {
   const router = useRouter();
@@ -56,6 +57,10 @@ const AccountPage = () => {
     >
       <section className="relative rounded-xl overflow-auto p-8 w-full h-full ">
         <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-2 pl-4 pt-4 pr-4 flex gap-4 justify-between">
+            <div></div>
+            <PriceOracleSimulatorPanel />
+          </div>
           <div className="p-4 rounded-lg shadow-lg">
             <Blockies
               className="m-4 rounded-full inline"
@@ -82,11 +87,10 @@ const AccountPage = () => {
           </div>
           <div className="p-4 rounded-lg shadow-lg">
             <div className="grid col-span-2 ">
-              Account Value: {format(account?.accountValue, { symbol: 'USD' })}
+              Account Value: {account?.accountValueUsd.toDisplayString()}
             </div>
             <div>
-              Free Collateral:{' '}
-              {format(account?.freeCollateral, { symbol: 'USD' })}
+              Free Collateral: {account?.freeCollateralUsd.toDisplayString()}
             </div>
             <div>Collateral Ratio: {account?.collateralRatio}</div>
             <div>Loan to Value: {account?.ltv}</div>

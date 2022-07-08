@@ -1,19 +1,17 @@
 import { BigNumber, ethers } from 'ethers';
-import { Token } from './AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { format } from '@/utils/Format';
 import { CurrencyAmount } from './CurrencyAmount';
 
-export class TokenAmount implements CurrencyAmount {
-  readonly symbol: string;
+export class UsdAmount implements CurrencyAmount {
+  readonly symbol = 'USD';
   readonly n: BigNumber;
 
-  constructor(textValue: string, readonly token: Token) {
+  constructor(textValue: string) {
     this.n = BigNumber.from(textValue);
-    this.symbol = token.symbol;
   }
 
   toExactString(): string {
-    return ethers.utils.formatUnits(this.n, this.token.decimals);
+    return ethers.utils.formatUnits(this.n, 18);
   }
 
   toNumber(): number {
@@ -27,7 +25,7 @@ export class TokenAmount implements CurrencyAmount {
     }
   ): string {
     return format(this.toNumber(), {
-      symbol: this.token.symbol,
+      symbol: 'USD',
       decimals,
       abbreviate,
     });

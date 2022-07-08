@@ -1,3 +1,4 @@
+import LiquidationsTable from '@/components/tables/Liquidations';
 import { Meta } from '@/layouts/Meta';
 import Main from '@/templates/Main';
 
@@ -19,7 +20,7 @@ const LiquidationsIndex = () => {
         id="overview"
         className="relative rounded-xl overflow-auto p-8 w-full h-full"
       >
-        <div className="p-4 rounded-lg shadow-lg h-full">TODO</div>
+        <LiquidationsTable />
       </section>
     </Main>
   );

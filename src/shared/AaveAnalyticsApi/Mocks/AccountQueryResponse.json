@@ -2,9 +2,11 @@
   "account": {
     "id": "0x513ea9319e98713f25a387c2ca66d625b57495d6",
     "address": "0x013ea9319e98713f25a387c2ca66d625b57495d6",
-    "accountValue": "2194936200000000000000000",
     "tag": "Celcius",
-    "freeCollateral": "1554200000000000000000",
+    "accountValueUsd": "2194936200000000000000000",
+    "accountValueEth": "4936200000000000000000",
+    "freeCollateralUsd": "1554200000000000000000",
+    "freeCollateralEth": "4200000000000000000",
     "ltv": 0.3209,
     "collateralRatio": 3.0646,
     "crossCurrencyRisk": true,
