@@ -18,7 +18,7 @@ const LiquidationsIndex = () => {
     >
       <section
         id="overview"
-        className="relative rounded-xl overflow-auto p-8 w-full h-full"
+        className="relative rounded-xl overflow-auto p-8 pt-0 w-full h-full"
       >
         <LiquidationsTable />
       </section>

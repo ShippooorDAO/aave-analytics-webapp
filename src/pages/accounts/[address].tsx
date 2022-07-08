@@ -55,7 +55,7 @@ const AccountPage = () => {
         },
       ]}
     >
-      <section className="relative rounded-xl overflow-auto p-8 w-full h-full ">
+      <section className="relative rounded-xl overflow-auto p-8 pt-0 w-full h-full ">
         <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-2 pl-4 pt-4 pr-4 flex gap-4 justify-between">
             <div></div>

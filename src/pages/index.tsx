@@ -1,4 +1,4 @@
-import Overview from '@/components/home/Overview';
+import Accounts from '@/components/tables/Accounts';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
 
@@ -12,7 +12,9 @@ const Index = () => {
         />
       }
     >
-      <Overview />
+      <section className="w-full h-full p-4">
+        <Accounts />
+      </section>
     </Main>
   );
 };
