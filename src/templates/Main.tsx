@@ -12,7 +12,7 @@ type IMainProps = {
 };
 
 export const Main = (props: IMainProps) => (
-  <div className="w-full h-full antialiased">
+  <div className="antialiased">
     {props.meta}
     <Navbar2>
       <>
@@ -22,9 +22,9 @@ export const Main = (props: IMainProps) => (
           </div>
           {props.children}
         </div>
-        <Footer />
       </>
     </Navbar2>
+    <Footer />
   </div>
 );
 
