@@ -6,8 +6,12 @@ export class UsdAmount implements CurrencyAmount {
   readonly symbol = 'USD';
   readonly n: BigNumber;
 
-  constructor(textValue: string) {
-    this.n = BigNumber.from(textValue);
+  constructor(value: number | string) {
+    if (typeof value === 'string') {
+      this.n = BigNumber.from(value);
+    } else {
+      this.n = ethers.utils.parseUnits(value.toString());
+    }
   }
 
   toExactString(): string {

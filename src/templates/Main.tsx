@@ -16,11 +16,11 @@ export const Main = (props: IMainProps) => (
     {props.meta}
     <Navbar2>
       <>
-        <div className="relative overflow-hidden h-full">
+        <div className="relative">
           <div className="pt-4 pl-8">
             {props.breadcrumbs && <Breadcrumbs links={props.breadcrumbs} />}
           </div>
-          {props.children}
+          <div className="max-w-5xl mx-auto">{props.children}</div>
         </div>
       </>
     </Navbar2>

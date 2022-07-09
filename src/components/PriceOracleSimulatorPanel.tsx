@@ -1,96 +1,12 @@
 import { Token } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
-import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProvider';
 import { SimulatedPriceOracle } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracle.type';
 import { useSimulatedPriceOracleContext } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
-import { format } from '@/utils/Format';
 import { useState } from 'react';
 import { Badge, Button, Table } from 'react-daisyui';
 import TokenChip from './TokenChip';
-import Select from 'react-select';
 import NoRowsOverlay from './tables/NoRowsOverlay';
-
-export const CurrencySelect = ({
-  onSelect,
-  excludes,
-  className,
-  ...rest
-}: {
-  onSelect: (token: Token) => void;
-  excludes?: Token[];
-} & React.HTMLAttributes<HTMLDivElement>) => {
-  const { tokens } = useAaveAnalyticsApiContext();
-  const filteredTokens = tokens.filter(
-    (token) => !(excludes || []).includes(token)
-  );
-
-  return (
-    <div className={`dropdown ${className || ''}`} {...rest}>
-      <label
-        tabIndex={0}
-        className={
-          'btn btn-sm m-1 mb-3' +
-          (filteredTokens.length === 0 ? ' btn-disabled' : '')
-        }
-      >
-        + Add Token
-      </label>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-      >
-        {filteredTokens.map((token: Token) => (
-          <li key={token.id}>
-            <a onClick={() => onSelect(token)}>{token.symbol}</a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-export const CurrencySelect2 = ({
-  onSelect,
-  excludes,
-}: {
-  onSelect: (token: Token) => void;
-  excludes?: Token[];
-  className?: string;
-}) => {
-  const { tokens } = useAaveAnalyticsApiContext();
-  const filteredTokens = tokens.filter(
-    (token) => !(excludes || []).includes(token)
-  );
-
-  const options = filteredTokens.map((token: Token) => ({
-    value: token.id,
-    label: token.symbol,
-  }));
-
-  return (
-    <Select
-      classNamePrefix="react-select"
-      onChange={(entry) => {
-        const token = filteredTokens.find((t) => t.id === entry?.value);
-        if (token) {
-          onSelect(token);
-        }
-      }}
-      controlShouldRenderValue={false}
-      options={options}
-      isSearchable={true}
-      closeMenuOnSelect={false}
-      maxMenuHeight={200}
-      placeholder="Search token..."
-      formatOptionLabel={({ value }) => {
-        const token = filteredTokens.find((t) => t.id === value);
-        if (token) {
-          return <TokenChip token={token} />;
-        }
-        return '';
-      }}
-    />
-  );
-};
+import { TokenSelect } from './TokenSelect/TokenSelect';
+import { UsdAmount } from '@/shared/UsdAmount';
 
 export const PriceOracleSimulatorPanel = () => {
   const {
@@ -119,21 +35,21 @@ export const PriceOracleSimulatorPanel = () => {
   const clearAllTokens = () => {};
 
   const changeSimulatedValue = (token: Token, value: string) => {
-    const price = Number(value);
+    const priceUsd = new UsdAmount(Number(value));
 
-    if (price <= 0) {
+    if (priceUsd.n.lte(0)) {
       return;
     }
 
     const pendingChange = pendingChanges.get(token.id);
-    if (pendingChange?.price === price) {
+    if (pendingChange?.priceUsd.toExactString() === priceUsd.toExactString()) {
       return;
     }
 
     setPendingChanges(
       new Map([
         ...Array.from(pendingChanges.entries()),
-        [token.id, { token, price }],
+        [token.id, { token, priceUsd }],
       ])
     );
   };
@@ -189,7 +105,7 @@ export const PriceOracleSimulatorPanel = () => {
           <div className="grid gap-3 grid-flow-col p-3 rounded-xl border-neutral border-2">
             {Array.from(simulatedPriceOracles.values())
               .slice(0, 3)
-              .map(({ token, price }) => (
+              .map(({ token, priceUsd }) => (
                 <Badge className="h-8 pl-1 badge-outline">
                   <a
                     onClick={() => clearTokenSimulation(token)}
@@ -197,8 +113,7 @@ export const PriceOracleSimulatorPanel = () => {
                   >
                     ✕
                   </a>
-                  {token.symbol}{' '}
-                  {format(price, { abbreviate: true, symbol: 'USD' })}
+                  {token.symbol} {priceUsd.toDisplayString()}
                 </Badge>
               ))}
             {simulatedPriceOracles.size > 3 && (
@@ -219,8 +134,8 @@ export const PriceOracleSimulatorPanel = () => {
         Run simulation
       </label>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
-      <div className="modal max-w-none min-h-96 ">
-        <div className="modal-box max-w-none moverflow-hidden">
+      <div className="modal">
+        <div className="modal-box max-w-5xl">
           <label
             htmlFor="my-modal"
             className="btn btn-sm btn-circle absolute right-2 top-2  "
@@ -228,7 +143,7 @@ export const PriceOracleSimulatorPanel = () => {
             ✕
           </label>
           <div className="w-56 mb-2">
-            <CurrencySelect2
+            <TokenSelect
               onSelect={(token) => addToken(token)}
               excludes={simulatedTokens}
             />

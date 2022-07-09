@@ -7,8 +7,12 @@ export class TokenAmount implements CurrencyAmount {
   readonly symbol: string;
   readonly n: BigNumber;
 
-  constructor(textValue: string, readonly token: Token) {
-    this.n = BigNumber.from(textValue);
+  constructor(value: number|string, readonly token: Token) {
+    if (typeof value === 'string') {
+      this.n = BigNumber.from(value);
+    } else {
+      this.n = ethers.utils.parseUnits(value.toString(), token.decimals);
+    }
     this.symbol = token.symbol;
   }
 

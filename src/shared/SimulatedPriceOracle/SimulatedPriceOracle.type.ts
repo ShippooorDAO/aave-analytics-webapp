@@ -1,8 +1,9 @@
 import { Token } from "../AaveAnalyticsApi/AaveAnalyticsApi.type";
+import { UsdAmount } from "../UsdAmount";
 
 export interface SimulatedPriceOracle {
-    token: Token;
-    price: number;
+  token: Token;
+  priceUsd: UsdAmount;
 }
 
 export interface SimulatedPriceOracleProviderState {

@@ -3,7 +3,7 @@ import Main from '@/templates/Main';
 import { useRouter } from 'next/router';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import DefaultErrorPage from 'next/error';
-import { Button, Link } from 'react-daisyui';
+import { Badge, Button, Link } from 'react-daisyui';
 import TransactionsTable from '@/components/tables/Transactions';
 import PortfolioTable from '@/components/tables/Portfolio';
 import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProvider';
@@ -55,38 +55,44 @@ const AccountPage = () => {
         },
       ]}
     >
-      <section className="relative rounded-xl overflow-auto p-8 pt-0 w-full h-full ">
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="col-span-2 pl-4 pt-4 pr-4 flex gap-4 justify-between">
-            <div></div>
-            <PriceOracleSimulatorPanel />
-          </div>
-          <div className="p-4 rounded-lg shadow-lg">
+      <section className="relative rounded-xl">
+        <div className="flex gap-4 justify-between">
+          <div></div>
+          <PriceOracleSimulatorPanel />
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="p-4">
             <Blockies
               className="m-4 rounded-full inline"
               seed={address}
-              size={10}
-              scale={4}
+              size={16}
+              scale={8}
             />
-            <span className="font-bold">{address}</span>
-            <Link
-              className="btn btn-circle btn-outline btn-sm inline"
-              href={`https://etherscan.io/address/${address}`}
-              target="_blank"
-            >
+            <div className="inline-block">
+              {account?.tag && (
+                <Badge className="badge-accent badge-lg font-bold text-lg">
+                  {account.tag}
+                </Badge>
+              )}
+              <br />
+              <span className="font-bold text-lg mr-2">
+                {getAccountShorthand(address)}
+              </span>
+              <Button className="btn-circle btn-ghost btn-sm inline mr-2">
+                <ContentCopy onClick={() => handleCopyButton()} />
+              </Button>
               <img
-                className="h-6 m-0"
+                onClick={() =>
+                  window.open(`https://etherscan.io/address/${address}`)
+                }
+                className="btn btn-circle btn-ghost btn-sm inline h-6 bg-white m-0 cursor-pointer"
                 src="/assets/images/etherscan.svg"
                 alt=""
               />
-            </Link>
-            <Button className="btn-circle btn-outline btn-sm inline">
-              <ContentCopy onClick={() => handleCopyButton()} />
-            </Button>
-            {account?.tag && <h3 className="inline">Tag: {account.tag}</h3>}
+            </div>
           </div>
           <div className="p-4 rounded-lg shadow-lg">
-            <div className="grid col-span-2 ">
+            <div className=" ">
               Account Value: {account?.accountValueUsd.toDisplayString()}
             </div>
             <div>
@@ -112,7 +118,7 @@ const AccountPage = () => {
           </div>
           <div className="p-4 rounded-lg shadow-lg col-span-2">
             <span className="font-bold">Transactions</span>
-            <div className="h-96 w-full mt-3">
+            <div className="h-full w-full mt-3">
               <TransactionsTable accountId={address} />
             </div>
           </div>
