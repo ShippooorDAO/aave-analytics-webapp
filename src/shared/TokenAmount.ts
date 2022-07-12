@@ -33,6 +33,11 @@ export class TokenAmount implements CurrencyAmount {
       abbreviate: false,
     }
   ): string {
+    decimals = decimals || 2;
+    const num = this.toNumber();
+    if (num < 1/(10**decimals)) {
+      decimals = decimals * 2;
+    }
     return format(this.toNumber(), {
       symbol: this.symbol,
       decimals,
