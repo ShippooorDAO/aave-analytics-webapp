@@ -80,53 +80,6 @@ export function createAccountsQueryVariables(params: AccountsQueryParams) {
     };
 };
 
-/**
-
-enum SortDirection {
-    ASC
-    DESC
-}
-type TokenPrice {
-    token: Token!
-    priceUsd: String!
-}
-type Filters {
-    accountIdOrTagContains: String
-
-    accountValueUsdGt: String
-    accountValueUsdGtEq: String
-    accountValueUsdSm: String
-    accountValueUsdSmEq: String
-    accountValueUsdEq: String
-
-    freeCollateralUsdGt: String
-    freeCollateralUsdGtEq: String
-    freeCollateralUsdSm: String
-    freeCollateralUsdSmEq: String
-    freeCollateralUsdEq: String
-
-    loanToValueGt: Float
-    loanToValueGtEq: Float
-    loanToValueSm: Float
-    loanToValueSmEq: Float
-    loanToValueEq: Float
-
-    collateralRatioGt: Float
-    collateralRatioGtEq: Float
-    collateralRatioSm: Float
-    collateralRatioSmEq: Float
-    collateralRatioEq: Float
-
-    healthScoreGt: Float
-    healthScoreGtEq: Float
-    healthScoreSm: Float
-    healthScoreoSmEq: Float
-    healthScoreEq: Float
-
-    hasCrossCurrencyRisk: Boolean
-}
-*/
-
 export const ACCOUNTS_QUERY = gql`
   query getAccounts(
         $filters: Filters,
@@ -145,7 +98,7 @@ export const ACCOUNTS_QUERY = gql`
     ) {
       id
       freeCollateralUsd
-      accountValueUSd
+      accountValueUsd
       healthScore
     }
   }

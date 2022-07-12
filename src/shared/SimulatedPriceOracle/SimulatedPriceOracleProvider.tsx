@@ -1,4 +1,6 @@
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
+import { Token } from '../AaveAnalyticsApi/AaveAnalyticsApi.type';
+import { UsdAmount } from '../UsdAmount';
 
 import {
   SimulatedPriceOracle,
@@ -13,10 +15,22 @@ const SimulatedPriceOracleContext =
     get simulatedPriceOracles(): never {
       throw new Error(missingProviderError);
     },
-    get setSimulatedPriceOracles(): never {
+    get deleteSimulatedPriceOracle(): never {
       throw new Error(missingProviderError);
     },
-    get clearSimulatedPriceOracles(): never {
+    get clearAll(): never {
+      throw new Error(missingProviderError);
+    },
+    get pendingChanges(): never {
+      throw new Error(missingProviderError);
+    },
+    get setPendingChange(): never {
+      throw new Error(missingProviderError);
+    },
+    get commitPendingChanges(): never {
+      throw new Error(missingProviderError);
+    },
+    get clearPendingChanges(): never {
       throw new Error(missingProviderError);
     },
   });
@@ -39,12 +53,18 @@ export const SimulatedPriceOracleProvider: FC<
     setSimulatedPriceOracles(new Map<string, SimulatedPriceOracle>());
   };
 
+  const deleteSimulatedPriceOracle = (token: Token) => {
+    simulatedPriceOracles.delete(token.id);
+    setSimulatedPriceOracles(new Map(simulatedPriceOracles));
+  };
+
   return (
     <SimulatedPriceOracleContext.Provider
       value={{
+        simulatedPriceOracles,
+        deleteSimulatedPriceOracle,
         clearSimulatedPriceOracles,
         setSimulatedPriceOracles,
-        simulatedPriceOracles,
       }}
     >
       {children}

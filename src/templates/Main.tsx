@@ -20,11 +20,11 @@ export const Main = (props: IMainProps) => (
           <div className="pt-4 pl-8">
             {props.breadcrumbs && <Breadcrumbs links={props.breadcrumbs} />}
           </div>
-          <div className="max-w-5xl mx-auto">{props.children}</div>
+          <div className="max-w-7xl mx-auto">{props.children}</div>
         </div>
       </>
+      <Footer />
     </Navbar2>
-    <Footer />
   </div>
 );
 

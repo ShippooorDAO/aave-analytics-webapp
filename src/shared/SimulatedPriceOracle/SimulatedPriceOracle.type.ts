@@ -8,6 +8,7 @@ export interface SimulatedPriceOracle {
 
 export interface SimulatedPriceOracleProviderState {
   simulatedPriceOracles: Map<string, SimulatedPriceOracle>;
-  setSimulatedPriceOracles: (priceOracles: Map<string, SimulatedPriceOracle>) => void;
+  setSimulatedPriceOracles: (simulatedPriceOracles: Map<string, SimulatedPriceOracle>) => void;
+  deleteSimulatedPriceOracle: (token: Token) => void;
   clearSimulatedPriceOracles: () => void;
 }

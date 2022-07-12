@@ -15,6 +15,7 @@ import { format, getAccountShorthand } from '@/utils/Format';
 import Blockies from 'react-blockies';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
 import { PriceOracleSimulatorPanel } from '@/components/PriceOracleSimulatorPanel';
+import { QuickSimulationFilters } from '@/components/QuickSimulationFilters';
 
 const AccountPage = () => {
   const router = useRouter();
@@ -56,16 +57,21 @@ const AccountPage = () => {
       ]}
     >
       <section className="relative rounded-xl">
-        <div className="flex gap-4 justify-between">
-          <div></div>
-          <PriceOracleSimulatorPanel />
+        <div className="grid grid-cols-3 mb-5">
+          <span></span>
+          <span className="justify-self-center">
+            <QuickSimulationFilters />
+          </span>
+          <span className="justify-self-end">
+            <PriceOracleSimulatorPanel />
+          </span>
         </div>
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-stretch justify-between">
           <div className="p-4">
             <Blockies
-              className="m-4 rounded-full inline"
+              className="m-4 rounded-full inline shadow-lg"
               seed={address}
-              size={16}
+              size={14}
               scale={8}
             />
             <div className="inline-block">
@@ -91,24 +97,44 @@ const AccountPage = () => {
               />
             </div>
           </div>
-          <div className="p-4 rounded-lg shadow-lg">
-            <div className=" ">
-              Account Value: {account?.accountValueUsd.toDisplayString()}
+          <div className="p-4 rounded-lg shadow-lg grid grid-cols-2 gap-4">
+            <div>
+              <div>Account Value</div>
+              <div className="font-bold">
+                {account?.accountValueUsd.toDisplayString()}
+              </div>
             </div>
             <div>
-              Free Collateral: {account?.freeCollateralUsd.toDisplayString()}
+              <div>Free Collateral</div>
+              <div className="font-bold">
+                {account?.freeCollateralUsd.toDisplayString()}
+              </div>
             </div>
-            <div>Collateral Ratio: {account?.collateralRatio}</div>
-            <div>Loan to Value: {account?.ltv}</div>
             <div>
-              Health Factor:{' '}
-              {account?.healthScore && (
-                <HealthFactorBadge healthFactor={account.healthScore} />
-              )}
+              <div>Collateral Ratio</div>
+              <div className="font-bold">{account?.collateralRatio}</div>
+            </div>
+            <div>
+              <div>Loan to Value</div>
+              <div className="font-bold">{account?.ltv}</div>
+            </div>
+            <div>
+              <div>Health Factor</div>
+              <div className="font-bold">
+                {account?.healthScore && (
+                  <HealthFactorBadge healthFactor={account.healthScore} />
+                )}
+              </div>
             </div>
           </div>
-          <div className="p-4 rounded-lg shadow-lg col-span-2">
-            <span className="font-bold mr-5">Portfolio</span>
+          <div className="p-4 rounded-lg shadow-lg">
+            <span className="font-bold mr-5">Collateral</span>
+            <div className="h-96 w-full mt-3">
+              <PortfolioTable positions={account?.positions} />
+            </div>
+          </div>
+          <div className="p-4 rounded-lg shadow-lg">
+            <span className="font-bold mr-5">Debt positions</span>
             {account?.crossCurrencyRisk && (
               <div className="badge badge-warning">Has Cross-Currency Risk</div>
             )}
@@ -116,9 +142,9 @@ const AccountPage = () => {
               <PortfolioTable positions={account?.positions} />
             </div>
           </div>
-          <div className="p-4 rounded-lg shadow-lg col-span-2">
+          <div className="p-4 rounded-lg shadow-lg md:col-span-2">
             <span className="font-bold">Transactions</span>
-            <div className="h-full w-full mt-3">
+            <div className="h-96 w-full mt-3">
               <TransactionsTable accountId={address} />
             </div>
           </div>

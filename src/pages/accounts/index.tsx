@@ -16,9 +16,7 @@ const AccountsIndex = () => {
         { title: 'Accounts', uri: '/accounts' },
       ]}
     >
-      <section className="w-full h-screen">
-        <Accounts />
-      </section>
+      <Accounts />
     </Main>
   );
 };

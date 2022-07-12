@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <footer className="drop-shadow-md">
-      <div className="container">
+      <div className="container mx-auto">
         <div className="grid grid-cols-1 justify-items-center gap-6 text-center lg:grid-cols-12 lg:gap-0">
           <div className="flex flex-row justify-between lg:col-span-3 lg:justify-self-start m-5 bg-gray-400 rounded p-2">
             <img

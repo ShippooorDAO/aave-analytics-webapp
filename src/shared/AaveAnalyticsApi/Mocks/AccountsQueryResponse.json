@@ -8,7 +8,7 @@
       "accountValueEth": "4936200000000000000000",
       "freeCollateralUsd": "1554200000000000000000",
       "freeCollateralEth": "4200000000000000000",
-      "ltv": 0.3209,
+      "loanToValue": 0.3209,
       "collateralRatio": 3.0646,
       "healthScore": 2.1,
       "crossCurrencyRisk": true
@@ -20,7 +20,7 @@
       "accountValueEth": "4936200000000000000000",
       "freeCollateralUsd": "1554200000000000000000",
       "freeCollateralEth": "4200000000000000000",
-      "ltv": 0.3209,
+      "loanToValue": 0.3209,
       "collateralRatio": 3.0646,
       "healthScore": 1.9,
       "crossCurrencyRisk": true
@@ -32,7 +32,7 @@
       "accountValueEth": "4936200000000000000000",
       "freeCollateralUsd": "1554200000000000000000",
       "freeCollateralEth": "4200000000000000000",
-      "ltv": 0.3209,
+      "loanToValue": 0.3209,
       "collateralRatio": 3.0646,
       "healthScore": 1.6,
       "crossCurrencyRisk": true
@@ -44,7 +44,7 @@
       "accountValueEth": "4936200000000000000000",
       "freeCollateralUsd": "1554200000000000000000",
       "freeCollateralEth": "4200000000000000000",
-      "ltv": 0.3209,
+      "loanToValue": 0.3209,
       "collateralRatio": 3.0646,
       "healthScore": 1.4,
       "crossCurrencyRisk": true
@@ -56,7 +56,7 @@
       "accountValueEth": "4936200000000000000000",
       "freeCollateralUsd": "1554200000000000000000",
       "freeCollateralEth": "4200000000000000000",
-      "ltv": 0.3209,
+      "loanToValue": 0.3209,
       "collateralRatio": 3.0646,
       "healthScore": 1.22,
       "crossCurrencyRisk": true
@@ -68,7 +68,7 @@
       "accountValueEth": "4936200000000000000000",
       "freeCollateralUsd": "1554200000000000000000",
       "freeCollateralEth": "4200000000000000000",
-      "ltv": 0.3209,
+      "loanToValue": 0.3209,
       "collateralRatio": 3.0646,
       "healthScore": 1.09,
       "crossCurrencyRisk": true

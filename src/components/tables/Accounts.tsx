@@ -30,6 +30,7 @@ import {
 } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiQueries';
 import { useQuery } from '@apollo/client';
 import { UsdAmount } from '@/shared/UsdAmount';
+import { QuickSimulationFilters } from '../QuickSimulationFilters';
 
 const columns: GridColDef[] = [
   {
@@ -95,6 +96,7 @@ function QuickSearchToolbar() {
             .filter((value) => value !== '')
         }
       />
+      <QuickSimulationFilters />
       <PriceOracleSimulatorPanel />
     </div>
   );
@@ -116,8 +118,8 @@ export default function AccountsTable() {
     variables: createAccountsQueryVariables(accountsQueryParams),
   });
 
-  const rows = data?.accounts || [];
-
+  // const rows = data?.accounts || [];
+  const rows = parseAccountsQueryResponse(MockAccountsQueryResponse);
   const openAccount = (account: Account) => {
     window.open(`/accounts/${account.id}`, '_blank');
   };
@@ -180,6 +182,7 @@ export default function AccountsTable() {
     <DataGrid
       rows={rows}
       columns={columns}
+      className="h-[500px]"
       onRowClick={({ row }) => openAccount(row)}
       getRowClassName={() => 'cursor-pointer'}
       paginationMode="server"
