@@ -38,7 +38,7 @@ export class TokenAmount implements CurrencyAmount {
     if (num < 1/(10**decimals)) {
       decimals = decimals * 2;
     }
-    return format(this.toNumber(), {
+    return format(num, {
       symbol: this.symbol,
       decimals,
       abbreviate,
