@@ -15,22 +15,13 @@ const SimulatedPriceOracleContext =
     get simulatedPriceOracles(): never {
       throw new Error(missingProviderError);
     },
+    get setSimulatedPriceOracles(): never {
+      throw new Error(missingProviderError);
+    },
     get deleteSimulatedPriceOracle(): never {
       throw new Error(missingProviderError);
     },
-    get clearAll(): never {
-      throw new Error(missingProviderError);
-    },
-    get pendingChanges(): never {
-      throw new Error(missingProviderError);
-    },
-    get setPendingChange(): never {
-      throw new Error(missingProviderError);
-    },
-    get commitPendingChanges(): never {
-      throw new Error(missingProviderError);
-    },
-    get clearPendingChanges(): never {
+    get clearSimulatedPriceOracles(): never {
       throw new Error(missingProviderError);
     },
   });

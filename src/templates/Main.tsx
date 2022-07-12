@@ -17,7 +17,7 @@ export const Main = (props: IMainProps) => (
     <Navbar>
       <>
         <div className="relative">
-          <div className="pt-4 pl-8">
+          <div className="py-4 px-8">
             {props.breadcrumbs && <Breadcrumbs links={props.breadcrumbs} />}
           </div>
           <div className="max-w-7xl mx-auto">{props.children}</div>

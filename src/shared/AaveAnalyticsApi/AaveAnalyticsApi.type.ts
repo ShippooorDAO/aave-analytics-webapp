@@ -17,12 +17,13 @@ export interface Account {
   id: string;
   address: string;
   accountValueUsd: UsdAmount;
-  accountValueEth: EthAmount;
+  accountValueEth?: EthAmount;
   freeCollateralUsd: UsdAmount;
-  freeCollateralEth: EthAmount;
+  freeCollateralEth?: EthAmount;
   ltv: number;
-  collateralRatio: number;
-  crossCurrencyRisk: boolean;
+  maxLtv: number;
+  collateralRatio?: number;
+  crossCurrencyRisk?: boolean;
   healthScore?: number;
   tag?: string;
   positions?: TokenAmount[];
@@ -56,14 +57,15 @@ export interface AccountBaseResponse {
   id: string;
   address: string;
   accountValueUsd: string;
-  accountValueEth: string;
+  accountValueEth?: string;
   freeCollateralUsd: string;
-  freeCollateralEth: string;
+  freeCollateralEth?: string;
   ltv: number;
-  collateralRatio: number;
+  maxLtv: number;
+  collateralRatio?: number;
   healthScore?: number;
   tag?: string;
-  crossCurrencyRisk: boolean;
+  crossCurrencyRisk?: boolean;
 }
 
 export interface AccountsQueryResponse {
@@ -73,8 +75,13 @@ export interface AccountsQueryResponse {
 export interface AccountQueryResponse {
   account: AccountBaseResponse & {
     positions: {
-      balance: string;
-      tokenId: string;
+      id: string;
+      aTokenBalance: string;
+      stableDebt: string;
+      variableDebt: string;
+      token: {
+        id: string;
+      };
     }[];
   };
 }

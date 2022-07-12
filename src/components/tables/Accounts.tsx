@@ -182,7 +182,7 @@ export default function AccountsTable() {
     <DataGrid
       rows={rows}
       columns={columns}
-      className="h-[500px]"
+      className="h-[83vh]"
       onRowClick={({ row }) => openAccount(row)}
       getRowClassName={() => 'cursor-pointer'}
       paginationMode="server"

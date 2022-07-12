@@ -20,6 +20,20 @@ const columns: GridColDef[] = [
     valueFormatter: AmountFormatter,
     width: 160,
   },
+  {
+    field: 'tokenPrice',
+    headerName: 'Token Price (USD)',
+    valueGetter: (p) => p.row.token.priceUsd,
+    valueFormatter: AmountFormatter,
+    width: 160,
+  },
+  {
+    field: 'value',
+    headerName: 'Value (USD)',
+    valueGetter: (p) => p.row.toUsd(),
+    valueFormatter: AmountFormatter,
+    width: 160,
+  },
 ];
 
 export interface PortfolioTableProps {
@@ -38,7 +52,7 @@ export default function PortfolioTable({ positions }: PortfolioTableProps) {
       rows={rows || []}
       columns={columns}
       loading={loading}
-      getRowId={(row) => row.token.id}
+      getRowId={(row) => row.symbol}
       hideFooter={true}
       components={{
         LoadingOverlay: LinearProgress,

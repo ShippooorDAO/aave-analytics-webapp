@@ -10,30 +10,61 @@ import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyt
 import { useEffect, useState } from 'react';
 import { parseAccountQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
 import MockAccountQueryResponse from '@/shared/AaveAnalyticsApi/mocks/AccountQueryResponse.json';
-import { Account } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
+import {
+  Account,
+  AccountQueryResponse,
+} from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { format, getAccountShorthand } from '@/utils/Format';
 import Blockies from 'react-blockies';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
 import { PriceOracleSimulatorPanel } from '@/components/PriceOracleSimulatorPanel';
 import { QuickSimulationFilters } from '@/components/QuickSimulationFilters';
+import { useQuery } from '@apollo/client';
+import {
+  ACCOUNT_QUERY,
+  createAccountQueryVariables,
+  AccountQueryParams,
+} from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiQueries';
+import { useSimulatedPriceOracleContext } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
 
 const AccountPage = () => {
   const router = useRouter();
   const { address } = router.query;
 
-  const [account, setAccount] = useState<Account | undefined>();
+  const { simulatedPriceOracles } = useSimulatedPriceOracleContext();
   const { tokens } = useAaveAnalyticsApiContext();
-  const loading = !account;
+
+  const [accountQueryParams, setAccountQueryParams] = useState<
+    AccountQueryParams | undefined
+  >();
 
   useEffect(() => {
-    if (tokens.length > 0) {
-      setAccount(parseAccountQueryResponse(MockAccountQueryResponse, tokens));
+    if (address && typeof address === 'string') {
+      setAccountQueryParams({ id: address.toLowerCase() });
     }
-  }, [tokens]);
+  }, [address]);
 
-  if (typeof address !== 'string' || address === '') {
-    return <DefaultErrorPage statusCode={404} />;
+  useEffect(() => {
+    if (accountQueryParams) {
+      setAccountQueryParams({
+        ...accountQueryParams,
+        simulatedTokenPrices: Array.from(simulatedPriceOracles.values()),
+      });
+    }
+  }, [simulatedPriceOracles]);
+
+  const { data } = useQuery<AccountQueryResponse>(ACCOUNT_QUERY, {
+    variables: createAccountQueryVariables(
+      accountQueryParams || { id: '0x0003fca368838e813fb6d80e6ade47104980158a' }
+    ),
+    skip: !accountQueryParams,
+  });
+
+  if (!data || !address || typeof address !== 'string') {
+    return null;
   }
+
+  const account = parseAccountQueryResponse(data, tokens);
 
   const handleCopyButton = () => {
     navigator.clipboard.writeText(address as string);
@@ -111,12 +142,16 @@ const AccountPage = () => {
               </div>
             </div>
             <div>
-              <div>Collateral Ratio</div>
-              <div className="font-bold">{account?.collateralRatio}</div>
+              <div>Loan to Value</div>
+              <div className="font-bold">{account?.ltv.toFixed(3)}</div>
             </div>
             <div>
-              <div>Loan to Value</div>
-              <div className="font-bold">{account?.ltv}</div>
+              <div>Max Loan to Value</div>
+              <div className="font-bold">{account?.maxLtv.toFixed(3)}</div>
+            </div>
+            <div>
+              <div>Collateral Ratio</div>
+              <div className="font-bold">{account?.collateralRatio}</div>
             </div>
             <div>
               <div>Health Factor</div>
@@ -130,7 +165,11 @@ const AccountPage = () => {
           <div className="p-4 rounded-lg shadow-lg">
             <span className="font-bold mr-5">Collateral</span>
             <div className="h-96 w-full mt-3">
-              <PortfolioTable positions={account?.positions} />
+              <PortfolioTable
+                positions={account?.positions?.filter(
+                  (position) => !position.isDebt
+                )}
+              />
             </div>
           </div>
           <div className="p-4 rounded-lg shadow-lg">
@@ -139,7 +178,11 @@ const AccountPage = () => {
               <div className="badge badge-warning">Has Cross-Currency Risk</div>
             )}
             <div className="h-96 w-full mt-3">
-              <PortfolioTable positions={account?.positions} />
+              <PortfolioTable
+                positions={account?.positions?.filter(
+                  (position) => position.isDebt
+                )}
+              />
             </div>
           </div>
           <div className="p-4 rounded-lg shadow-lg md:col-span-2">

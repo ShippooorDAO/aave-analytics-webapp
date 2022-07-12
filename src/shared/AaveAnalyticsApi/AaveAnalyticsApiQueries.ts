@@ -103,3 +103,42 @@ export const ACCOUNTS_QUERY = gql`
     }
   }
 `;
+
+export interface AccountQueryParams {
+  id: string;
+  simulatedTokenPrices?: Array<{ token: Token; priceUsd: UsdAmount }>;
+}
+
+export function createAccountQueryVariables(params: AccountQueryParams) {
+    return {
+      ...params,
+      simulatedTokenPrices: params.simulatedTokenPrices?.map((s) => ({
+        token: s.token.id,
+        priceUsd: s.priceUsd.n.toString(),
+      })),
+    };
+};
+
+export const ACCOUNT_QUERY = gql`
+  query getAccount($id: ID!){
+    account(id: $id) {
+      id
+      freeCollateralUsd
+      accountValueUsd
+      healthScore
+      ltv
+      maxLtv
+      positions {
+        id
+        aTokenBalance
+        stableDebt
+        variableDebt
+        token {
+          id
+          symbol
+          priceUsd
+        }
+      }
+    }
+  }
+`;

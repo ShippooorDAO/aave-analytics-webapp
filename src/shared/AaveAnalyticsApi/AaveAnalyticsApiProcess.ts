@@ -1,6 +1,10 @@
+import { BigNumber } from "ethers";
+import { ATokenAmount } from "../ATokenAmount";
 import { EthAmount } from "../EthAmount";
+import { STokenAmount } from "../STokenAmount";
 import { TokenAmount } from "../TokenAmount";
 import { UsdAmount } from "../UsdAmount";
+import { VTokenAmount } from "../VTokenAmount";
 import { Account, AccountBaseResponse, AccountQueryResponse, AccountsQueryResponse, Liquidation, LiquidationsQueryResponse, Token, TokenQueryResponse, Transaction, TransactionBaseResponse, TransactionsQueryResponse, TransactionType } from "./AaveAnalyticsApi.type"
 
 export function parseTokenQueryResponse(response: TokenQueryResponse): Token[] {
@@ -15,23 +19,59 @@ export function parseTokenQueryResponse(response: TokenQueryResponse): Token[] {
 export function parseAccountBaseResponse(account: AccountBaseResponse) {
     return {
       ...account,
-      freeCollateralEth: parseEthAmount(account.freeCollateralEth),
       freeCollateralUsd: parseUsdAmount(account.freeCollateralUsd),
       accountValueUsd: parseUsdAmount(account.accountValueUsd),
-      accountValueEth: parseEthAmount(account.accountValueEth),
+      freeCollateralEth: account.freeCollateralEth
+        ? parseEthAmount(account.freeCollateralEth)
+        : undefined,
+      accountValueEth: account.accountValueEth
+        ? parseEthAmount(account.accountValueEth)
+        : undefined,
     };
+}
+
+function accountHasCrossCurrencyRisk(positions: TokenAmount[]) {
 }
 
 export function parseAccountQueryResponse(
   response: AccountQueryResponse, tokens: Token[]
 ): Account {
-    const positions = response.account.positions?.map((position) =>
-      parseTokenAmount(position.tokenId, position.balance, tokens)
-    ).filter((v) => v !== null) as TokenAmount[];
+    const positions: TokenAmount[] = [];
+    let crossCurrencyRisk = false;
+
+    for (const position of response.account.positions) {
+      const token = tokens.find((token) => token.id === position.token.id.toLowerCase());
+      if (!token) {
+        continue;
+      }
+      let aTokenAmount, sTokenAmount, vTokenAmount;
+      if (position.aTokenBalance && position.aTokenBalance !== '0') {
+        aTokenAmount = new ATokenAmount(position.aTokenBalance, token);
+        positions.push(new ATokenAmount(position.aTokenBalance, token));
+      }
+      if (position.stableDebt && position.stableDebt !== '0') {
+        sTokenAmount = new STokenAmount(position.stableDebt, token);
+        positions.push(sTokenAmount);
+      }
+      if (position.variableDebt && position.variableDebt !== '0') {
+        vTokenAmount = new VTokenAmount(position.variableDebt, token);
+        positions.push(new VTokenAmount(position.variableDebt, token));
+      }
+
+      const totalCurrencyDebt = vTokenAmount?.n.add(sTokenAmount?.n || 0);
+      const totalCurrencyCollateral = aTokenAmount?.n;
+      if (
+        !crossCurrencyRisk &&
+        totalCurrencyDebt?.gt(totalCurrencyCollateral || 0)
+      ) {
+        crossCurrencyRisk = true;
+      }
+    }
   
     return {
-        ...parseAccountBaseResponse(response.account),
-        positions
+      ...parseAccountBaseResponse(response.account),
+      crossCurrencyRisk,
+      positions,
     };
 }
 

@@ -9,7 +9,7 @@ import {
   AccountAddressRenderCell,
   AmountFormatter,
   TokenRenderCell,
-  TransactionTypeFormatter,
+  DatetimeFormatter,
 } from '@/utils/DataGrid';
 import MockLiquidationsQueryResponse from '@/shared/AaveAnalyticsApi/mocks/LiquidationsQueryResponse.json';
 import { parseLiquidationsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
@@ -25,23 +25,24 @@ import NoRowsOverlay from './NoRowsOverlay';
 const columns: GridColDef[] = [
   {
     field: 'timestamp',
-    type: 'date',
+    type: 'datetime',
     headerName: 'Timestamp',
-    width: 160,
+    valueFormatter: DatetimeFormatter,
+    width: 175,
   },
   {
     field: 'accountId',
     headerName: 'Account',
     renderCell: AccountAddressRenderCell,
     type: 'string',
-    width: 220,
+    width: 180,
   },
   {
     field: 'liquidatedAccountId',
     headerName: 'Liquidated Account',
     renderCell: AccountAddressRenderCell,
     type: 'string',
-    width: 220,
+    width: 180,
   },
   {
     field: 'token',
@@ -119,6 +120,7 @@ export default function LiquidationsTable() {
     <DataGrid
       rows={rows || []}
       columns={columns}
+      className="h-[83vh]"
       onRowClick={({ row }) => openTransaction(row)}
       getRowClassName={() => 'cursor-pointer'}
       loading={loading}

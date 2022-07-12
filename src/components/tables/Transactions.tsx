@@ -7,6 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   AmountFormatter,
+  DatetimeFormatter,
   TokenRenderCell,
   TransactionTypeFormatter,
 } from '@/utils/DataGrid';
@@ -47,8 +48,9 @@ const columns: GridColDef[] = [
   },
   {
     field: 'timestamp',
-    type: 'date',
+    type: 'datetime',
     headerName: 'Timestamp',
+    valueFormatter: DatetimeFormatter,
     width: 160,
   },
 ];

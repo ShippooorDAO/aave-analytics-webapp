@@ -8,13 +8,19 @@
     "freeCollateralUsd": "1554200000000000000000",
     "freeCollateralEth": "4200000000000000000",
     "ltv": 0.3209,
+    "maxLtv": 0.3209,
     "collateralRatio": 3.0646,
     "crossCurrencyRisk": true,
     "healthScore": 1.09,
     "positions": [
       {
-        "tokenId": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "balance": "4530123000000000000000000"
+        "id": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-0x513ea9319e98713f25a387c2ca66d625b57495d6",
+        "aTokenBalance": "4530123000000000000000000",
+        "stableDebt": "4530123000000000000000",
+        "variableDebt": "4530123000000000000000",
+        "token": {
+          "id": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        }
       }
     ]
   }

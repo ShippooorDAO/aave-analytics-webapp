@@ -104,3 +104,7 @@ export function AccountTagRenderCell(params: GridRenderCellParams<string>) {
   }
   return <Badge className="badge-accent">{params.value}</Badge>;
 }
+
+export function DatetimeFormatter(params: GridValueFormatterParams<Date>) {
+  return params.value.toLocaleString();
+}

@@ -2,18 +2,17 @@ import { BigNumber, ethers } from 'ethers';
 import { Token } from './AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { format } from '@/utils/Format';
 import { CurrencyAmount } from './CurrencyAmount';
+import { UsdAmount } from './UsdAmount';
 
 export class TokenAmount implements CurrencyAmount {
-  readonly symbol: string;
   readonly n: BigNumber;
 
-  constructor(value: number|string, readonly token: Token) {
+  constructor(value: number | string, readonly token: Token) {
     if (typeof value === 'string') {
       this.n = BigNumber.from(value);
     } else {
       this.n = ethers.utils.parseUnits(value.toString(), token.decimals);
     }
-    this.symbol = token.symbol;
   }
 
   toExactString(): string {
@@ -24,6 +23,10 @@ export class TokenAmount implements CurrencyAmount {
     return Number(this.toExactString());
   }
 
+  get symbol() {
+    return this.token.symbol;
+  }
+
   toDisplayString(
     { abbreviate, decimals }: { abbreviate?: boolean; decimals?: number } = {
       decimals: 2,
@@ -31,9 +34,18 @@ export class TokenAmount implements CurrencyAmount {
     }
   ): string {
     return format(this.toNumber(), {
-      symbol: this.token.symbol,
+      symbol: this.symbol,
       decimals,
       abbreviate,
     });
+  }
+
+  get isDebt() {
+    return false;
+  }
+
+  toUsd() {
+    const precision = BigNumber.from(10).pow(18);
+    return new UsdAmount(this.n.mul(this.token.priceUsd.n).div(precision));
   }
 }

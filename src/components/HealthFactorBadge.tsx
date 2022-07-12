@@ -26,7 +26,7 @@ export function HealthFactorBadge({ healthFactor }: { healthFactor: number }) {
   const healthFactorClass = getHealthFactorClass(healthFactor);
   return (
     <Badge className={`badge-ghost ${healthFactorClass} `}>
-      {healthFactor}
+      {healthFactor.toFixed(2)}
     </Badge>
   );
 }
