@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import Footer from '@/components/template/Footer';
 
-import Navbar2 from '../components/template/Navbar2';
+import Navbar from '../components/template/Navbar';
 import Breadcrumbs, { BreadcrumbLink } from '@/components/Breadcrumbs';
 
 type IMainProps = {
@@ -14,7 +14,7 @@ type IMainProps = {
 export const Main = (props: IMainProps) => (
   <div className="antialiased">
     {props.meta}
-    <Navbar2>
+    <Navbar>
       <>
         <div className="relative">
           <div className="pt-4 pl-8">
@@ -24,7 +24,7 @@ export const Main = (props: IMainProps) => (
         </div>
       </>
       <Footer />
-    </Navbar2>
+    </Navbar>
   </div>
 );
 
