@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from '@mui/icons-material/Menu';
+import Link from 'next/link';
 
 const Navbar = ({ children }: { children: ReactNode }) => {
   const { setTheme, resolvedTheme } = useTheme();
@@ -18,14 +19,16 @@ const Navbar = ({ children }: { children: ReactNode }) => {
             </label>
           </div>
           <div className="flex-1 px-2 mx-2">
-            <div>
-              <img
-                className="inline h-6 pr-3"
-                src="/assets/images/aave-logo.svg"
-                alt="aave logo"
-              />
-              <h1 className="inline">Analytics</h1>
-            </div>
+            <Link href="/">
+              <div className="cursor-pointer">
+                <img
+                  className="inline h-6 pr-3"
+                  src="/assets/images/aave-logo.svg"
+                  alt="aave logo"
+                />
+                <h1 className="inline">Analytics</h1>
+              </div>
+            </Link>
           </div>
           <div className="flex-none hidden lg:block">
             <ul className="menu menu-horizontal">
