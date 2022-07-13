@@ -93,7 +93,7 @@ export function createAccountsQueryVariables(params: AccountsQueryParams) {
 export const ACCOUNTS_QUERY = gql`
   query getAccounts(
         $filters: Filters,
-        $simulatedTokenPrices: [TokenPrice!],
+        $simulatedTokenPrices: [TokenPrice],
         $sortBy: String,
         $sortDirection: SortDirection,
         $pageNumber: Int,
