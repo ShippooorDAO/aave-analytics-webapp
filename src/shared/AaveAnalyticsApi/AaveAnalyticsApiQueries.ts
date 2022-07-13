@@ -92,24 +92,30 @@ export function createAccountsQueryVariables(params: AccountsQueryParams) {
 
 export const ACCOUNTS_QUERY = gql`
   query getAccounts(
-        $filters: Filters,
-        $simulatedTokenPrices: [TokenPrice],
-        $sortBy: String,
-        $sortDirection: SortDirection,
-        $pageNumber: Int,
-        $pageSize: Int) {
+    $simulatedTokenPrices: [TokenPrice]
+    $sortBy: String
+    $sortDirection: SortDirection
+    $pageNumber: Int
+    $pageSize: Int
+  ) {
     accounts(
-      filters: $filters
       sortBy: $sortBy
       sortDirection: $sortDirection
       pageNumber: $pageNumber
       pageSize: $pageSize
       simulatedTokenPrices: $simulatedTokenPrices
     ) {
-      id
-      freeCollateralUsd
-      accountValueUsd
-      healthScore
+      totalPages
+      totalEntries
+      accounts {
+        id
+        freeCollateralUsd
+        accountValueUsd
+        healthScore
+        ltv
+        maxLtv
+        tag
+      }
     }
   }
 `;

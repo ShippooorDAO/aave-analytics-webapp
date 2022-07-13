@@ -72,10 +72,15 @@ export function parseAccountQueryResponse(
     };
 }
 
-export function parseAccountsQueryResponse(response: AccountsQueryResponse): Account[] {
-    return response.accounts.map((account) => ({
-      ...parseAccountBaseResponse(account),
-    }));
+export function parseAccountsQueryResponse(response: AccountsQueryResponse) {
+  const {totalPages, totalEntries, accounts} = response.accounts;  
+  return {
+      totalEntries,
+      totalPages,
+      accounts: accounts.map((account) => ({
+          ...parseAccountBaseResponse(account),
+      })),
+  }
 }
 
 function parseTransactionType(txType: string): TransactionType {

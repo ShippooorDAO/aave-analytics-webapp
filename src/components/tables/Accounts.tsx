@@ -53,7 +53,7 @@ const numericOnlyOperators: GridFilterOperator[] =
 
 const columns: GridColDef[] = [
   {
-    field: 'address',
+    field: 'id',
     headerName: 'Address',
     width: 200,
     renderCell: AccountAddressRenderCell,
@@ -77,21 +77,25 @@ const columns: GridColDef[] = [
     width: 150,
   },
   {
-    field: 'loanToValue',
+    field: 'ltv',
     headerName: 'LTV',
     type: 'number',
-    valueFormatter: PercentageGridValueFormatter,
-    filterOperators: numericOnlyOperators,
     width: 110,
   },
   {
-    field: 'collateralRatio',
-    headerName: 'Collateral ratio',
+    field: 'maxLtv',
+    headerName: 'Max LTV',
     type: 'number',
-    valueFormatter: PercentageGridValueFormatter,
-    filterOperators: numericOnlyOperators,
-    width: 160,
+    width: 110,
   },
+  // {
+  //   field: 'collateralRatio',
+  //   headerName: 'Collateral ratio',
+  //   type: 'number',
+  //   valueFormatter: PercentageGridValueFormatter,
+  //   filterOperators: numericOnlyOperators,
+  //   width: 160,
+  // },
   {
     field: 'healthScore',
     headerName: 'Health score',
@@ -156,7 +160,6 @@ export default function AccountsTable() {
   });
 
   // const rows = data?.accounts || [];
-  const rows = parseAccountsQueryResponse(MockAccountsQueryResponse);
   const openAccount = (account: Account) => {
     window.open(`/accounts/${account.id}`, '_blank');
   };
@@ -178,7 +181,8 @@ export default function AccountsTable() {
   const numericalFields = [
     'accountValueUsd',
     'freeCollateralUsd',
-    'loanToValue',
+    'ltv',
+    'maxLtv',
     'collateralRatio',
     'healthScore',
   ];
@@ -212,6 +216,13 @@ export default function AccountsTable() {
         }
       }
     });
+
+    if (Object.keys(filters).length === 0) {
+      const { filters, ...rest } = accountsQueryParams;
+      setAccountsQueryParams(rest);
+      return;
+    }
+
     setAccountsQueryParams({
       ...accountsQueryParams,
       filters: filters as Filters,
@@ -258,6 +269,14 @@ export default function AccountsTable() {
       sortDirection,
     });
   };
+
+  if (!data) {
+    return null;
+  }
+
+  const { accounts, totalPages, totalEntries } =
+    parseAccountsQueryResponse(data);
+  const rows = accounts;
 
   return (
     <DataGrid

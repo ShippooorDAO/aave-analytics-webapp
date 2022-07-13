@@ -69,7 +69,11 @@ export interface AccountBaseResponse {
 }
 
 export interface AccountsQueryResponse {
-  accounts: AccountBaseResponse[];
+  accounts: {
+    totalPages: number;
+    totalEntries: number;
+    accounts: AccountBaseResponse[];
+  };
 }
 
 export interface AccountQueryResponse {
