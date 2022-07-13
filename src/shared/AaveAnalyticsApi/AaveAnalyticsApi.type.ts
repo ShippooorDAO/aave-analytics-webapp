@@ -20,8 +20,8 @@ export interface Account {
   accountValueEth?: EthAmount;
   freeCollateralUsd: UsdAmount;
   freeCollateralEth?: EthAmount;
-  ltv: number;
-  maxLtv: number;
+  ltv?: number;
+  maxLtv?: number;
   collateralRatio?: number;
   crossCurrencyRisk?: boolean;
   healthScore?: number;
@@ -60,8 +60,8 @@ export interface AccountBaseResponse {
   accountValueEth?: string;
   freeCollateralUsd: string;
   freeCollateralEth?: string;
-  ltv: number;
-  maxLtv: number;
+  ltv?: number;
+  maxLtv?: number;
   collateralRatio?: number;
   healthScore?: number;
   tag?: string;
@@ -81,6 +81,7 @@ export interface AccountQueryResponse {
       variableDebt: string;
       token: {
         id: string;
+        priceUsd: string;
       };
     }[];
   };

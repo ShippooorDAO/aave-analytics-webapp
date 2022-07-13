@@ -7,7 +7,7 @@ import { UsdAmount } from './UsdAmount';
 export class TokenAmount implements CurrencyAmount {
   readonly n: BigNumber;
 
-  constructor(value: number | string, readonly token: Token) {
+  constructor(value: number | string, readonly token: Token, private readonly simulatedPriceUsd?: UsdAmount) {
     if (typeof value === 'string') {
       this.n = BigNumber.from(value);
     } else {
@@ -51,6 +51,7 @@ export class TokenAmount implements CurrencyAmount {
 
   toUsd() {
     const precision = BigNumber.from(10).pow(18);
-    return new UsdAmount(this.n.mul(this.token.priceUsd.n).div(precision));
+    const tokenPriceUsd = this.simulatedPriceUsd?.n ?? this.token.priceUsd.n;
+    return new UsdAmount(this.n.mul(tokenPriceUsd).div(precision));
   }
 }

@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { ATokenAmount } from "../ATokenAmount";
 import { EthAmount } from "../EthAmount";
 import { STokenAmount } from "../STokenAmount";
@@ -41,18 +40,19 @@ export function parseAccountQueryResponse(
       if (!token) {
         continue;
       }
+      const priceUsd = parseUsdAmount(position.token.priceUsd);
       let aTokenAmount, sTokenAmount, vTokenAmount;
       if (position.aTokenBalance && position.aTokenBalance !== '0') {
-        aTokenAmount = new ATokenAmount(position.aTokenBalance, token);
-        positions.push(new ATokenAmount(position.aTokenBalance, token));
+        aTokenAmount = new ATokenAmount(position.aTokenBalance, token, priceUsd);
+        positions.push(aTokenAmount);
       }
       if (position.stableDebt && position.stableDebt !== '0') {
-        sTokenAmount = new STokenAmount(position.stableDebt, token);
+        sTokenAmount = new STokenAmount(position.stableDebt, token, priceUsd);
         positions.push(sTokenAmount);
       }
       if (position.variableDebt && position.variableDebt !== '0') {
-        vTokenAmount = new VTokenAmount(position.variableDebt, token);
-        positions.push(new VTokenAmount(position.variableDebt, token));
+        vTokenAmount = new VTokenAmount(position.variableDebt, token, priceUsd);
+        positions.push(vTokenAmount);
       }
 
       const totalCurrencyDebt = vTokenAmount?.n.add(sTokenAmount?.n || 0);

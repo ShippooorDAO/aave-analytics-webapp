@@ -23,7 +23,7 @@ const columns: GridColDef[] = [
   {
     field: 'tokenPrice',
     headerName: 'Token Price (USD)',
-    valueGetter: (p) => p.row.token.priceUsd,
+    valueGetter: (p) => p.row.simulatedPriceUsd || p.row.token.priceUsd,
     valueFormatter: AmountFormatter,
     width: 160,
   },
