@@ -2,19 +2,14 @@ import { Meta } from '@/layouts/Meta';
 import Main from '@/templates/Main';
 import { useRouter } from 'next/router';
 import ContentCopy from '@mui/icons-material/ContentCopy';
-import DefaultErrorPage from 'next/error';
-import { Badge, Button, Link } from 'react-daisyui';
+import { Badge, Button } from 'react-daisyui';
 import TransactionsTable from '@/components/tables/Transactions';
 import PortfolioTable from '@/components/tables/Portfolio';
 import { useAaveAnalyticsApiContext } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProvider';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { parseAccountQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
-import MockAccountQueryResponse from '@/shared/AaveAnalyticsApi/mocks/AccountQueryResponse.json';
-import {
-  Account,
-  AccountQueryResponse,
-} from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
-import { format, getAccountShorthand } from '@/utils/Format';
+import { AccountQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
+import { getAccountShorthand } from '@/utils/Format';
 import Blockies from 'react-blockies';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
 import { PriceOracleSimulatorPanel } from '@/components/PriceOracleSimulatorPanel';
@@ -23,7 +18,6 @@ import { useQuery } from '@apollo/client';
 import {
   ACCOUNT_QUERY,
   createAccountQueryVariables,
-  AccountQueryParams,
 } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiQueries';
 import { useSimulatedPriceOracleContext } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
 
@@ -31,43 +25,43 @@ const AccountPage = () => {
   const router = useRouter();
   const { address } = router.query;
 
+  if (!address || typeof address !== 'string') {
+    return null;
+  }
+
+  return <AccountDetail id={address.toLowerCase()} />;
+};
+
+const AccountDetail = ({ id }: { id: string }) => {
   const { simulatedPriceOracles } = useSimulatedPriceOracleContext();
   const { tokens } = useAaveAnalyticsApiContext();
 
-  const [accountQueryParams, setAccountQueryParams] = useState<
-    AccountQueryParams | undefined
-  >();
+  const { data, refetch } = useQuery<AccountQueryResponse>(ACCOUNT_QUERY, {
+    variables: createAccountQueryVariables({ id }),
+  });
 
   useEffect(() => {
-    if (address && typeof address === 'string') {
-      setAccountQueryParams({ id: address.toLowerCase() });
-    }
-  }, [address]);
-
-  useEffect(() => {
-    if (accountQueryParams) {
-      setAccountQueryParams({
-        ...accountQueryParams,
-        simulatedTokenPrices: Array.from(simulatedPriceOracles.values()),
-      });
+    const simulatedPriceOraclesArr = Array.from(simulatedPriceOracles.values());
+    if (simulatedPriceOraclesArr.length > 0) {
+      refetch(
+        createAccountQueryVariables({
+          id,
+          simulatedTokenPrices: simulatedPriceOraclesArr,
+        })
+      );
+    } else {
+      refetch(createAccountQueryVariables({ id }));
     }
   }, [simulatedPriceOracles]);
 
-  const { data } = useQuery<AccountQueryResponse>(ACCOUNT_QUERY, {
-    variables: createAccountQueryVariables(
-      accountQueryParams || { id: '0x0003fca368838e813fb6d80e6ade47104980158a' }
-    ),
-    skip: !accountQueryParams,
-  });
-
-  if (!data || !address || typeof address !== 'string') {
+  if (!data) {
     return null;
   }
 
   const account = parseAccountQueryResponse(data, tokens);
 
   const handleCopyButton = () => {
-    navigator.clipboard.writeText(address as string);
+    navigator.clipboard.writeText(id);
   };
 
   return (
@@ -82,8 +76,8 @@ const AccountPage = () => {
         { title: 'Overview', uri: '/' },
         { title: 'Accounts', uri: '/accounts' },
         {
-          title: getAccountShorthand(address),
-          uri: `/accounts/details?accountId=${address}`,
+          title: getAccountShorthand(id),
+          uri: `/accounts/details?accountId=${id}`,
         },
       ]}
     >
@@ -101,7 +95,7 @@ const AccountPage = () => {
           <div className="p-4">
             <Blockies
               className="m-4 rounded-full inline shadow-lg"
-              seed={address}
+              seed={id}
               size={14}
               scale={8}
             />
@@ -113,7 +107,7 @@ const AccountPage = () => {
               )}
               <br />
               <span className="font-bold text-lg mr-2">
-                {getAccountShorthand(address)}
+                {getAccountShorthand(id)}
               </span>
               <Button className="btn-circle btn-ghost btn-sm inline mr-2">
                 <ContentCopy onClick={() => handleCopyButton()} />
@@ -188,7 +182,7 @@ const AccountPage = () => {
           <div className="p-4 rounded-lg shadow-lg md:col-span-2">
             <span className="font-bold">Transactions</span>
             <div className="h-96 w-full mt-3">
-              <TransactionsTable accountId={address} />
+              <TransactionsTable accountId={id} />
             </div>
           </div>
         </div>
