@@ -200,13 +200,9 @@ export default function AccountsTable() {
           item.columnField === 'freeCollateralUsd' ||
           item.columnField === 'accountValueUsd'
         ) {
-          if (value) {
-            filters[key] = new UsdAmount(Number(value));
-          }
+          filters[key] = new UsdAmount(Number(value));
         } else {
-          if (value) {
-            filters[key] = Number(value);
-          }
+          filters[key] = Number(value);
         }
       } else if (item.columnField === 'crossCurrencyRisk') {
         if (value === 'true') {
