@@ -5,6 +5,9 @@ import {
   GridColDef,
   GridLinkOperator,
   GridFilterModel,
+  getGridNumericOperators,
+  GridFilterOperator,
+  GridSortModel,
 } from '@mui/x-data-grid';
 import {
   AccountAddressRenderCell,
@@ -27,10 +30,26 @@ import {
   ACCOUNTS_QUERY,
   createAccountsQueryVariables,
   Filters,
+  AccountSortBy,
+  SortDirection,
 } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiQueries';
 import { useQuery } from '@apollo/client';
 import { UsdAmount } from '@/shared/UsdAmount';
 import { QuickSimulationFilters } from '../QuickSimulationFilters';
+
+const operators: { [key: string]: string } = {
+  '=': 'Eq',
+  '<=': 'SmEq',
+  '<': 'Sm',
+  '>=': 'GtEq',
+  '>': 'Gt',
+};
+
+const numericOnlyOperators: GridFilterOperator[] =
+  getGridNumericOperators().filter(
+    (operator) =>
+      operator.label && Object.keys(operators).includes(operator.label)
+  );
 
 const columns: GridColDef[] = [
   {
@@ -38,17 +57,23 @@ const columns: GridColDef[] = [
     headerName: 'Address',
     width: 200,
     renderCell: AccountAddressRenderCell,
+    filterable: false,
+    sortable: false,
   },
   {
     field: 'accountValueUsd',
     headerName: 'Account value',
+    type: 'number',
     valueFormatter: AmountFormatter,
+    filterOperators: numericOnlyOperators,
     width: 150,
   },
   {
     field: 'freeCollateralUsd',
     headerName: 'Free collateral',
+    type: 'number',
     valueFormatter: AmountFormatter,
+    filterOperators: numericOnlyOperators,
     width: 150,
   },
   {
@@ -56,12 +81,15 @@ const columns: GridColDef[] = [
     headerName: 'LTV',
     type: 'number',
     valueFormatter: PercentageGridValueFormatter,
+    filterOperators: numericOnlyOperators,
     width: 110,
   },
   {
     field: 'collateralRatio',
     headerName: 'Collateral ratio',
+    type: 'number',
     valueFormatter: PercentageGridValueFormatter,
+    filterOperators: numericOnlyOperators,
     width: 160,
   },
   {
@@ -69,6 +97,7 @@ const columns: GridColDef[] = [
     headerName: 'Health score',
     type: 'number',
     renderCell: HealthScoreRenderCell,
+    filterOperators: numericOnlyOperators,
     width: 160,
   },
   {
@@ -82,22 +111,30 @@ const columns: GridColDef[] = [
     headerName: 'Tag',
     width: 160,
     renderCell: AccountTagRenderCell,
+    filterable: false,
+    sortable: false,
   },
 ];
 
 function QuickSearchToolbar() {
   return (
-    <div className="p-4 flex gap-4 justify-between">
+    <div className="p-4 grid grid-cols-1 grid-flow-row-dense md:grid-cols-3 gap-4 justify-between">
       <GridToolbarQuickFilter
+        className="justify-self-stretch"
         quickFilterParser={(searchInput: string) =>
           searchInput
             .split(',')
             .map((value) => value.trim())
             .filter((value) => value !== '')
         }
+        placeholder="Search by address or tag..."
       />
-      <QuickSimulationFilters />
-      <PriceOracleSimulatorPanel />
+      <div className="justify-self-center">
+        <QuickSimulationFilters />
+      </div>
+      <div className="justify-self-end">
+        <PriceOracleSimulatorPanel />
+      </div>
     </div>
   );
 }
@@ -124,29 +161,21 @@ export default function AccountsTable() {
     window.open(`/accounts/${account.id}`, '_blank');
   };
 
-  const onPageChange = (page: number) => {
+  const handlePageChange = (page: number) => {
     setAccountsQueryParams({
       ...accountsQueryParams,
       pageNumber: page,
     });
   };
 
-  const onPageSizeChange = (pageSize: number) => {
+  const handlePageSizeChange = (pageSize: number) => {
     setAccountsQueryParams({
       ...accountsQueryParams,
       pageSize: pageSize,
     });
   };
 
-  const operators: { [key: string]: string } = {
-    '=': 'Eq',
-    '<=': 'SmEq',
-    '<': 'Sm',
-    '>=': 'GtEq',
-    '>': 'Gt',
-  };
-
-  const comparableFields = [
+  const numericalFields = [
     'accountValueUsd',
     'freeCollateralUsd',
     'loanToValue',
@@ -154,27 +183,83 @@ export default function AccountsTable() {
     'healthScore',
   ];
 
-  const onFilterChange = (model: GridFilterModel) => {
-    console.log(model);
+  const handleFilterModelChange = (model: GridFilterModel) => {
     const filters: { [key: string]: string | UsdAmount | number | boolean } =
       {};
     model.items.forEach((item) => {
-      const operator = operators[item.operatorValue || ''];
       const value = item.value;
-      if (item.columnField in comparableFields && operator) {
-        const key = item.columnField + operators[operator];
-        if (item.columnField in ['freeCollateralUsd', 'accountValueUsd']) {
-          filters[key] = new UsdAmount(value);
+
+      if (!value) {
+        return;
+      }
+
+      if (numericalFields.includes(item.columnField)) {
+        const operator = operators[item.operatorValue || ''];
+        const key = item.columnField + operator;
+        if (
+          item.columnField === 'freeCollateralUsd' ||
+          item.columnField === 'accountValueUsd'
+        ) {
+          if (value) {
+            filters[key] = new UsdAmount(Number(value));
+          }
         } else {
-          filters[key] = Number(value);
+          if (value) {
+            filters[key] = Number(value);
+          }
         }
-      } else if (item.columnField === 'hasCrossCurrencyRisk') {
-        filters[item.columnField] = Boolean(value);
+      } else if (item.columnField === 'crossCurrencyRisk') {
+        if (value === 'true') {
+          filters[item.columnField] = true;
+        } else if (value === 'false') {
+          filters[item.columnField] = false;
+        }
       }
     });
     setAccountsQueryParams({
       ...accountsQueryParams,
       filters: filters as Filters,
+    });
+  };
+
+  const clearSortQueryParams = () => {
+    const { sortBy, sortDirection, ...rest } = accountsQueryParams;
+    setAccountsQueryParams(rest);
+  };
+
+  const handleSortModelChange = (model: GridSortModel) => {
+    if (model.length === 0) {
+      clearSortQueryParams();
+      return;
+    }
+
+    // MUI Data Grid Free License only supports one sort model.
+    // We can just pick the first one.
+    const { field, sort } = model[0]!;
+    if (!field) {
+      clearSortQueryParams();
+      return;
+    }
+
+    const sortBy = field as AccountSortBy;
+
+    let sortDirection: SortDirection | undefined;
+    if (sort === 'asc') {
+      sortDirection = 'ASC';
+    } else if (sort === 'desc') {
+      sortDirection = 'DESC';
+    }
+
+    if (sortDirection === undefined) {
+      const { sortDirection: _, ...rest } = accountsQueryParams;
+      setAccountsQueryParams(rest);
+      return;
+    }
+
+    setAccountsQueryParams({
+      ...accountsQueryParams,
+      sortBy,
+      sortDirection,
     });
   };
 
@@ -186,10 +271,12 @@ export default function AccountsTable() {
       onRowClick={({ row }) => openAccount(row)}
       getRowClassName={() => 'cursor-pointer'}
       paginationMode="server"
-      onPageChange={onPageChange}
-      onPageSizeChange={onPageSizeChange}
       filterMode="server"
-      onFilterModelChange={onFilterChange}
+      sortingMode="server"
+      onPageChange={handlePageChange}
+      onPageSizeChange={handlePageSizeChange}
+      onFilterModelChange={handleFilterModelChange}
+      onSortModelChange={handleSortModelChange}
       initialState={{
         filter: {
           filterModel: {

@@ -30,9 +30,6 @@ export function parseAccountBaseResponse(account: AccountBaseResponse) {
     };
 }
 
-function accountHasCrossCurrencyRisk(positions: TokenAmount[]) {
-}
-
 export function parseAccountQueryResponse(
   response: AccountQueryResponse, tokens: Token[]
 ): Account {

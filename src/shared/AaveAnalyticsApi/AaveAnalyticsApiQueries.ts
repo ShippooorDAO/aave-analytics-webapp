@@ -48,13 +48,23 @@ export interface Filters {
   hasCrossCurrencyRisk?: boolean;
 }
 
+export type AccountSortBy =
+  | 'accountValueUsd'
+  | 'freeCollateralUsd'
+  | 'loanToValue'
+  | 'collateralRatio'
+  | 'healthScore'
+  | 'crossCurrencyRisk';
+
+export type SortDirection = 'DESC' | 'ASC';
+
 export interface AccountsQueryParams {
-    sortBy?: 'accountValueUsd' | 'freeCollateralUsd' | 'loanToValue' | 'collateralRatio' | 'healthScore' | 'hasCrossCurrencyRisk';
-    sortDirection?: 'DESC' | 'ASC';
-    pageNumber?: number;
-    pageSize?: number;
-    filters?: Filters;
-    simulatedTokenPrices?: Array<{token: Token, priceUsd: UsdAmount}>
+  sortBy?: AccountSortBy;
+  sortDirection?: SortDirection;
+  pageNumber?: number;
+  pageSize?: number;
+  filters?: Filters;
+  simulatedTokenPrices?: Array<{ token: Token; priceUsd: UsdAmount }>;
 }
 
 export function createAccountsQueryVariables(params: AccountsQueryParams) {
