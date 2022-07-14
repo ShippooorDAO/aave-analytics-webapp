@@ -146,7 +146,7 @@ function QuickSearchToolbar() {
 export default function AccountsTable() {
   const { simulatedPriceOracles } = useSimulatedPriceOracleContext();
   const [accountsQueryParams, setAccountsQueryParams] =
-    useState<AccountsQueryParams>({});
+    useState<AccountsQueryParams>({ pageNumber: 1, pageSize: 25 });
 
   useEffect(() => {
     setAccountsQueryParams({
@@ -270,17 +270,13 @@ export default function AccountsTable() {
     });
   };
 
-  if (!data) {
-    return null;
-  }
-
-  const { accounts, totalPages, totalEntries } =
-    parseAccountsQueryResponse(data);
-  const rows = accounts;
+  const { accounts, totalPages, totalEntries } = data
+    ? parseAccountsQueryResponse(data)
+    : { accounts: [], totalPages: 0, totalEntries: 0 };
 
   return (
     <DataGrid
-      rows={rows}
+      rows={accounts}
       columns={columns}
       className="h-[83vh]"
       onRowClick={({ row }) => openAccount(row)}
@@ -288,6 +284,10 @@ export default function AccountsTable() {
       paginationMode="server"
       filterMode="server"
       sortingMode="server"
+      loading={accounts.length === 0}
+      rowCount={totalEntries}
+      pageSize={accountsQueryParams.pageSize}
+      page={accountsQueryParams.pageNumber}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}
       onFilterModelChange={handleFilterModelChange}
