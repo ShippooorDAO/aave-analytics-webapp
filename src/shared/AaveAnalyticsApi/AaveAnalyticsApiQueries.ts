@@ -7,6 +7,7 @@ export const TOKENS_QUERY = gql`
     tokens {
         id
         symbol
+        decimals
         priceUsd
     }
 }

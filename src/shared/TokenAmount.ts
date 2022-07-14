@@ -50,7 +50,7 @@ export class TokenAmount implements CurrencyAmount {
   }
 
   toUsd() {
-    const precision = BigNumber.from(10).pow(18);
+    const precision = BigNumber.from(10).pow(this.token.decimals);
     const tokenPriceUsd = this.simulatedPriceUsd?.n ?? this.token.priceUsd.n;
     return new UsdAmount(this.n.mul(tokenPriceUsd).div(precision));
   }
