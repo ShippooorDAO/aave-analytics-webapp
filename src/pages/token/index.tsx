@@ -31,8 +31,8 @@ type AaveTokenTemplateProps = {
 
 const CountCard = ({ title, amount }: { title: string; amount: string }) => (
   <div className="rounded-xl shadow-md p-2">
-    <div className="font-bold">{title}</div>
-    <div>{amount}</div>
+    <div>{title}</div>
+    <div className="font-bold">{amount}</div>
   </div>
 );
 
