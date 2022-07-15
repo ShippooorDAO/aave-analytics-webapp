@@ -113,6 +113,8 @@ export const ACCOUNTS_QUERY = gql`
         freeCollateralUsd
         accountValueUsd
         healthScore
+        crossCurrencyRisk
+        collateralRatio
         ltv
         maxLtv
         tag
@@ -137,7 +139,7 @@ export function createAccountQueryVariables(params: AccountQueryParams) {
 };
 
 export const ACCOUNT_QUERY = gql`
-  query getAccount($id: ID!, $simulatedTokenPrices: [TokenPrice]){
+  query getAccount($id: ID!, $simulatedTokenPrices: [TokenPrice]) {
     account(id: $id, simulatedTokenPrices: $simulatedTokenPrices) {
       id
       freeCollateralUsd
@@ -145,6 +147,8 @@ export const ACCOUNT_QUERY = gql`
       healthScore
       ltv
       maxLtv
+      crossCurrencyRisk
+      collateralRatio
       positions {
         id
         aTokenBalance

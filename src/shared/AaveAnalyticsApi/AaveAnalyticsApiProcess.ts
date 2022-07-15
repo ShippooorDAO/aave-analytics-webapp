@@ -33,7 +33,6 @@ export function parseAccountQueryResponse(
   response: AccountQueryResponse, tokens: Token[]
 ): Account {
     const positions: TokenAmount[] = [];
-    let crossCurrencyRisk = false;
 
     for (const position of response.account.positions) {
       const token = tokens.find((token) => token.id === position.token.id.toLowerCase());
@@ -41,33 +40,19 @@ export function parseAccountQueryResponse(
         continue;
       }
       const priceUsd = parseUsdAmount(position.token.priceUsd);
-      let aTokenAmount, sTokenAmount, vTokenAmount;
       if (position.aTokenBalance && position.aTokenBalance !== '0') {
-        aTokenAmount = new ATokenAmount(position.aTokenBalance, token, priceUsd);
-        positions.push(aTokenAmount);
+        positions.push(new ATokenAmount(position.aTokenBalance, token, priceUsd));
       }
       if (position.stableDebt && position.stableDebt !== '0') {
-        sTokenAmount = new STokenAmount(position.stableDebt, token, priceUsd);
-        positions.push(sTokenAmount);
+        positions.push(new STokenAmount(position.stableDebt, token, priceUsd));
       }
       if (position.variableDebt && position.variableDebt !== '0') {
-        vTokenAmount = new VTokenAmount(position.variableDebt, token, priceUsd);
-        positions.push(vTokenAmount);
-      }
-
-      const totalCurrencyDebt = vTokenAmount?.n.add(sTokenAmount?.n || 0);
-      const totalCurrencyCollateral = aTokenAmount?.n;
-      if (
-        !crossCurrencyRisk &&
-        totalCurrencyDebt?.gt(totalCurrencyCollateral || 0)
-      ) {
-        crossCurrencyRisk = true;
+        positions.push(new VTokenAmount(position.variableDebt, token, priceUsd));
       }
     }
   
     return {
       ...parseAccountBaseResponse(response.account),
-      crossCurrencyRisk,
       positions,
     };
 }

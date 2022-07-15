@@ -92,11 +92,8 @@ const columns: GridColDef[] = [
     field: 'collateralRatio',
     headerName: 'Collateral ratio',
     type: 'number',
-    valueGetter: (p) => (p.row.ltv !== 0 ? 1 / p.row.ltv : null),
     filterOperators: numericOnlyOperators,
     width: 160,
-    filterable: false,
-    sortable: false,
   },
   {
     field: 'healthScore',
