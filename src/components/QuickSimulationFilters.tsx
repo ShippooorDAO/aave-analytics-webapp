@@ -29,7 +29,7 @@ export const QuickSimulationFilters = () => {
         {Array.from(simulatedPriceOracles.values())
           .slice(0, 3)
           .map(({ token, priceUsd }) => (
-            <Badge className="h-8 pl-1 badge-outline">
+            <Badge className="h-8 pl-1 badge-outline" key={token.id}>
               <a
                 onClick={() => deleteSimulatedPriceOracle(token)}
                 className="w-5 h-5 btn btn-xs btn-circle btn-ghost font-content"
