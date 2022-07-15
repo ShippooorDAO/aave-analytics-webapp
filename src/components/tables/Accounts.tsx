@@ -55,7 +55,7 @@ const columns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'Address',
-    width: 200,
+    width: 160,
     renderCell: AccountAddressRenderCell,
     filterable: false,
     sortable: false,
@@ -80,22 +80,24 @@ const columns: GridColDef[] = [
     field: 'ltv',
     headerName: 'LTV',
     type: 'number',
-    width: 110,
+    width: 90,
   },
   {
     field: 'maxLtv',
     headerName: 'Max LTV',
     type: 'number',
-    width: 110,
+    width: 90,
   },
-  // {
-  //   field: 'collateralRatio',
-  //   headerName: 'Collateral ratio',
-  //   type: 'number',
-  //   valueFormatter: PercentageGridValueFormatter,
-  //   filterOperators: numericOnlyOperators,
-  //   width: 160,
-  // },
+  {
+    field: 'collateralRatio',
+    headerName: 'Collateral ratio',
+    type: 'number',
+    valueGetter: (p) => (p.row.ltv !== 0 ? 1 / p.row.ltv : null),
+    filterOperators: numericOnlyOperators,
+    width: 160,
+    filterable: false,
+    sortable: false,
+  },
   {
     field: 'healthScore',
     headerName: 'Health score',
@@ -144,19 +146,35 @@ function QuickSearchToolbar() {
 }
 
 export default function AccountsTable() {
+  const pagesPerQuery = 20;
   const { simulatedPriceOracles } = useSimulatedPriceOracleContext();
+
+  const [tablePageNumber, setTablePageNumber] = useState<number>(0);
+  const [tablePageSize, setTablePageSize] = useState<number>(25);
   const [accountsQueryParams, setAccountsQueryParams] =
-    useState<AccountsQueryParams>({ pageNumber: 1, pageSize: 25 });
+    useState<AccountsQueryParams>({
+      pageNumber: 1,
+      pageSize: tablePageSize * pagesPerQuery,
+    });
 
   useEffect(() => {
+    const simulatedPriceOraclesArr =
+      simulatedPriceOracles.size > 0
+        ? Array.from(simulatedPriceOracles.values())
+        : undefined;
+
     setAccountsQueryParams({
       ...accountsQueryParams,
-      simulatedTokenPrices: Array.from(simulatedPriceOracles.values()),
+      simulatedTokenPrices: simulatedPriceOraclesArr,
     });
   }, [simulatedPriceOracles]);
 
   const { data } = useQuery<AccountsQueryResponse>(ACCOUNTS_QUERY, {
-    variables: createAccountsQueryVariables(accountsQueryParams),
+    variables: createAccountsQueryVariables({
+      ...accountsQueryParams,
+      pageNumber: Math.floor(tablePageNumber / pagesPerQuery) + 1,
+      pageSize: tablePageSize * pagesPerQuery,
+    }),
   });
 
   // const rows = data?.accounts || [];
@@ -165,17 +183,11 @@ export default function AccountsTable() {
   };
 
   const handlePageChange = (page: number) => {
-    setAccountsQueryParams({
-      ...accountsQueryParams,
-      pageNumber: page,
-    });
+    setTablePageNumber(page);
   };
 
   const handlePageSizeChange = (pageSize: number) => {
-    setAccountsQueryParams({
-      ...accountsQueryParams,
-      pageSize: pageSize,
-    });
+    setTablePageSize(pageSize);
   };
 
   const numericalFields = [
@@ -274,33 +286,40 @@ export default function AccountsTable() {
     ? parseAccountsQueryResponse(data)
     : { accounts: [], totalPages: 0, totalEntries: 0 };
 
+  const rows = accounts.slice(
+    (tablePageNumber % pagesPerQuery) * tablePageSize,
+    (tablePageNumber % pagesPerQuery) * tablePageSize + tablePageSize
+  );
+
   return (
-    <DataGrid
-      rows={accounts}
-      columns={columns}
-      className="h-[83vh]"
-      onRowClick={({ row }) => openAccount(row)}
-      getRowClassName={() => 'cursor-pointer'}
-      paginationMode="server"
-      filterMode="server"
-      sortingMode="server"
-      loading={accounts.length === 0}
-      rowCount={totalEntries}
-      pageSize={accountsQueryParams.pageSize}
-      page={accountsQueryParams.pageNumber}
-      onPageChange={handlePageChange}
-      onPageSizeChange={handlePageSizeChange}
-      onFilterModelChange={handleFilterModelChange}
-      onSortModelChange={handleSortModelChange}
-      initialState={{
-        filter: {
-          filterModel: {
-            items: [],
-            quickFilterLogicOperator: GridLinkOperator.Or,
+    <div className="h-[83vh]">
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        onRowClick={({ row }) => openAccount(row)}
+        rowsPerPageOptions={[tablePageSize]}
+        getRowClassName={() => 'cursor-pointer'}
+        paginationMode="server"
+        filterMode="server"
+        sortingMode="server"
+        loading={accounts.length === 0}
+        rowCount={totalEntries}
+        pageSize={tablePageSize}
+        page={tablePageNumber}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        onFilterModelChange={handleFilterModelChange}
+        onSortModelChange={handleSortModelChange}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [],
+              quickFilterLogicOperator: GridLinkOperator.Or,
+            },
           },
-        },
-      }}
-      components={{ Toolbar: QuickSearchToolbar }}
-    />
+        }}
+        components={{ Toolbar: QuickSearchToolbar }}
+      />
+    </div>
   );
 }

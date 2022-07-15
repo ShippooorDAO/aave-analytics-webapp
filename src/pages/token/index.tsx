@@ -4,7 +4,6 @@ import Main from '@/templates/Main';
 
 import CoinGecko from 'coingecko-api';
 import { useEffect, useState } from 'react';
-import CountCard from '@/components/CountCard';
 import { format } from '@/utils/Format';
 
 type AaveTokenParametersProps = {
@@ -30,6 +29,13 @@ type AaveTokenTemplateProps = {
   maxSupply: number;
 };
 
+const CountCard = ({ title, amount }: { title: string; amount: string }) => (
+  <div className="rounded-xl shadow-md p-2">
+    <div className="font-bold">{title}</div>
+    <div>{amount}</div>
+  </div>
+);
+
 function AaveTokenTemplate({
   price,
   marketCap,
@@ -42,8 +48,8 @@ function AaveTokenTemplate({
   maxSupply,
 }: AaveTokenTemplateProps) {
   return (
-    <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="col-span-2 bg-base-200 rounded-xl shadow-md p-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="col-span-2 rounded-xl shadow-md p-2">
         <div className="font-bold">Price over time</div>
         <AaveTokenPriceChart />
       </div>

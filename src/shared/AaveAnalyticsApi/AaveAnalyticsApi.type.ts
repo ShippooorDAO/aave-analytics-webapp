@@ -68,12 +68,14 @@ export interface AccountBaseResponse {
   crossCurrencyRisk?: boolean;
 }
 
+export interface AccountsGraphQLSchemaType {
+  totalPages: number;
+  totalEntries: number;
+  accounts: AccountBaseResponse[];
+};
+
 export interface AccountsQueryResponse {
-  accounts: {
-    totalPages: number;
-    totalEntries: number;
-    accounts: AccountBaseResponse[];
-  };
+  accounts: AccountsGraphQLSchemaType;
 }
 
 export interface AccountQueryResponse {

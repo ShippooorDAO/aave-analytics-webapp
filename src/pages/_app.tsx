@@ -7,8 +7,10 @@ import { AaveAnalyticsApiProvider } from '@/shared/AaveAnalyticsApi/AaveAnalytic
 import { SimulatedPriceOracleProvider } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
 import { ApolloProviderProps } from '@apollo/client/react/context';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { cacheConfig } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiCacheConfig';
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache(cacheConfig);
+
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_AAVE_ANALYTICS_API_URL,
   cache,
