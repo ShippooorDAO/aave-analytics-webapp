@@ -32,17 +32,20 @@ import {
   Filters,
   AccountSortBy,
   SortDirection,
+  FieldType,
+  Operator,
+  fieldTypes,
 } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiQueries';
 import { useQuery } from '@apollo/client';
 import { UsdAmount } from '@/shared/UsdAmount';
 import { QuickSimulationFilters } from '../QuickSimulationFilters';
 
-const operators: { [key: string]: string } = {
-  '=': 'Eq',
-  '<=': 'SmEq',
-  '<': 'Sm',
-  '>=': 'GtEq',
-  '>': 'Gt',
+const operators: { [key: string]: Operator } = {
+  '=': Operator.EQ,
+  '<=': Operator.SM_EQ,
+  '<': Operator.SM,
+  '>=': Operator.GT_EQ,
+  '>': Operator.GT,
 };
 
 const numericOnlyOperators: GridFilterOperator[] =
@@ -166,12 +169,13 @@ export default function AccountsTable() {
     });
   }, [simulatedPriceOracles]);
 
+  const variables = createAccountsQueryVariables({
+    ...accountsQueryParams,
+    pageNumber: Math.floor(tablePageNumber / pagesPerQuery) + 1,
+    pageSize: tablePageSize * pagesPerQuery,
+  });
   const { data } = useQuery<AccountsQueryResponse>(ACCOUNTS_QUERY, {
-    variables: createAccountsQueryVariables({
-      ...accountsQueryParams,
-      pageNumber: Math.floor(tablePageNumber / pagesPerQuery) + 1,
-      pageSize: tablePageSize * pagesPerQuery,
-    }),
+    variables,
   });
 
   // const rows = data?.accounts || [];
@@ -187,54 +191,74 @@ export default function AccountsTable() {
     setTablePageSize(pageSize);
   };
 
-  const numericalFields = [
-    'accountValueUsd',
-    'freeCollateralUsd',
-    'ltv',
-    'maxLtv',
-    'collateralRatio',
-    'healthScore',
-  ];
-
   const handleFilterModelChange = (model: GridFilterModel) => {
-    const filters: { [key: string]: string | UsdAmount | number | boolean } =
-      {};
+    const filter: Filters = {};
+
     model.items.forEach((item) => {
       const value = item.value;
-
-      if (!value) {
+      const field = item.columnField;
+      if (!value || value === '') {
         return;
       }
 
-      if (numericalFields.includes(item.columnField)) {
-        const operator = operators[item.operatorValue || ''];
-        const key = item.columnField + operator;
-        if (
-          item.columnField === 'freeCollateralUsd' ||
-          item.columnField === 'accountValueUsd'
-        ) {
-          filters[key] = new UsdAmount(Number(value));
-        } else {
-          filters[key] = Number(value);
+      const fieldType = (
+        fieldTypes as {
+          [key: string]: FieldType;
         }
-      } else if (item.columnField === 'crossCurrencyRisk') {
-        if (value === 'true') {
-          filters[item.columnField] = true;
-        } else if (value === 'false') {
-          filters[item.columnField] = false;
-        }
+      )[item.columnField];
+      const operator = operators[item.operatorValue || ''];
+
+      switch (fieldType) {
+        case FieldType.BIG_INT:
+          if (!operator) {
+            break;
+          }
+          filter.bigintFilters = filter.bigintFilters || [];
+          filter.bigintFilters.push({
+            field,
+            operator,
+            value: new UsdAmount(Number(value)).n.toString(),
+          });
+          break;
+        case FieldType.FLOAT:
+          if (!operator) {
+            break;
+          }
+          filter.floatFilters = filter.floatFilters || [];
+          filter.floatFilters.push({
+            field,
+            operator,
+            value: Number(value),
+          });
+          break;
+        case FieldType.BOOLEAN:
+          filter.boolFilters = filter.boolFilters || [];
+          filter.boolFilters.push({
+            field,
+            value: value === 'true',
+          });
+          break;
+        case FieldType.STRING:
+          filter.stringFilters =
+            filter.stringFilters ||
+            new Array<{
+              field: string;
+              contains: string;
+            }>();
+          filter.stringFilters.push({
+            field,
+            contains: value,
+          });
+          break;
       }
     });
 
-    if (Object.keys(filters).length === 0) {
-      const { filters, ...rest } = accountsQueryParams;
-      setAccountsQueryParams(rest);
-      return;
-    }
+    const search = model.quickFilterValues?.[0];
 
     setAccountsQueryParams({
       ...accountsQueryParams,
-      filters: filters as Filters,
+      filter,
+      search,
     });
   };
 

@@ -9,7 +9,8 @@ export const cacheConfig = {
           keyArgs: [
             '$sortBy',
             '$sortDirection',
-            '$filters',
+            '$filter',
+            '$search',
             '$simulatedPriceOracles',
           ],
           merge(

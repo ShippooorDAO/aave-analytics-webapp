@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { CurrencyAmount } from "../CurrencyAmount";
 import { UsdAmount } from "../UsdAmount";
 import { Token } from "./AaveAnalyticsApi.type";
 
@@ -13,41 +14,38 @@ export const TOKENS_QUERY = gql`
 }
 `;
 
-export interface Filters {
-  accountIdOrTagContains?: string;
-
-  accountValueUsdGt?: UsdAmount;
-  accountValueUsdGtEq?: UsdAmount;
-  accountValueUsdSm?: UsdAmount;
-  accountValueUsdSmEq?: UsdAmount;
-  accountValueUsdEq?: UsdAmount;
-
-  freeCollateralUsdGt?: UsdAmount;
-  freeCollateralUsdGtEq?: UsdAmount;
-  freeCollateralUsdSm?: UsdAmount;
-  freeCollateralUsdSmEq?: UsdAmount;
-  freeCollateralUsdEq?: UsdAmount;
-
-  loanToValueGt?: number;
-  loanToValueGtEq?: number;
-  loanToValueSm?: number;
-  loanToValueSmEq?: number;
-  loanToValueEq?: number;
-
-  collateralRatioGt?: number;
-  collateralRatioGtEq?: number;
-  collateralRatioSm?: number;
-  collateralRatioSmEq?: number;
-  collateralRatioEq?: number;
-
-  healthScoreGt?: number;
-  healthScoreGtEq?: number;
-  healthScoreSm?: number;
-  healthScoreSmEq?: number;
-  healthScoreEq?: number;
-
-  hasCrossCurrencyRisk?: boolean;
+export enum Operator {
+  EQ = 'EQ',
+  SM_EQ = 'SM_EQ',
+  SM = 'SM',
+  GT_EQ = 'GT_EQ',
+  GT = 'GT',
 }
+
+export enum FieldType {
+  UNKNOWN,
+  BIG_INT,
+  FLOAT,
+  STRING,
+  BOOLEAN,
+}
+
+export interface Filters {
+  bigintFilters?: { field: string; value: string; operator: Operator }[];
+  floatFilters?: { field: string; value: number; operator: Operator }[];
+  boolFilters?: { field: string; value: boolean }[];
+  stringFilters?: { field: string; contains: string }[];
+}
+
+export const fieldTypes = {
+  accountValueUsd: FieldType.BIG_INT,
+  freeCollateralUsd: FieldType.BIG_INT,
+  ltv: FieldType.FLOAT,
+  maxLtv: FieldType.FLOAT,
+  collateralRatio: FieldType.FLOAT,
+  healthScore: FieldType.FLOAT,
+  crossCurrencyRisk: FieldType.BOOLEAN,
+};
 
 export type AccountSortBy =
   | 'accountValueUsd'
@@ -64,26 +62,14 @@ export interface AccountsQueryParams {
   sortDirection?: SortDirection;
   pageNumber?: number;
   pageSize?: number;
-  filters?: Filters;
+  filter?: Filters;
   simulatedTokenPrices?: Array<{ token: Token; priceUsd: UsdAmount }>;
+  search?: string;
 }
 
 export function createAccountsQueryVariables(params: AccountsQueryParams) {
     return {
       ...params,
-      filters: {
-        ...params.filters,
-        accountValueUsdGt: params.filters?.accountValueUsdGt?.n.toString(),
-        accountValueUsdGtEq: params.filters?.accountValueUsdGtEq?.n.toString(),
-        accountValueUsdSm: params.filters?.accountValueUsdSm?.n.toString(),
-        accountValueUsdSmEq: params.filters?.accountValueUsdSmEq?.n.toString(),
-        accountValueUsdEq: params.filters?.accountValueUsdEq?.n.toString(),
-        freeCollateralUsdGt: params.filters?.freeCollateralUsdGt?.n.toString(),
-        freeCollateralUsdGtEq: params.filters?.freeCollateralUsdGtEq?.n.toString(),
-        freeCollateralUsdSm: params.filters?.freeCollateralUsdSm?.n.toString(),
-        freeCollateralUsdSmEq: params.filters?.freeCollateralUsdSmEq?.n.toString(),
-        freeCollateralUsdEq: params.filters?.freeCollateralUsdEq?.n.toString(),
-      },
       simulatedTokenPrices: params.simulatedTokenPrices?.map((s) => ({
         tokenId: s.token.id,
         priceUsd: s.priceUsd.n.toString(),
@@ -98,6 +84,8 @@ export const ACCOUNTS_QUERY = gql`
     $sortDirection: SortDirection
     $pageNumber: Int
     $pageSize: Int
+    $filter: Filter
+    $search: String
   ) {
     accounts(
       sortBy: $sortBy
@@ -105,6 +93,8 @@ export const ACCOUNTS_QUERY = gql`
       pageNumber: $pageNumber
       pageSize: $pageSize
       simulatedTokenPrices: $simulatedTokenPrices
+      filter: $filter
+      search: $search
     ) {
       totalPages
       totalEntries
