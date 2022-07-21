@@ -14,10 +14,8 @@ import {
   AccountTagRenderCell,
   AmountFormatter,
   HealthScoreRenderCell,
-  PercentageGridValueFormatter,
 } from '@/utils/DataGrid';
 import { PriceOracleSimulatorPanel } from '../PriceOracleSimulatorPanel';
-import MockAccountsQueryResponse from '@/shared/AaveAnalyticsApi/mocks/AccountsQueryResponse.json';
 import { parseAccountsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
 import {
   Account,
@@ -39,8 +37,9 @@ import {
 import { useQuery } from '@apollo/client';
 import { UsdAmount } from '@/shared/UsdAmount';
 import { QuickSimulationFilters } from '../QuickSimulationFilters';
+import { LinearProgress } from '@mui/material';
 
-const operators: { [key: string]: Operator } = {
+const dataGridOperatorsMapping: { [key: string]: Operator } = {
   '=': Operator.EQ,
   '<=': Operator.SM_EQ,
   '<': Operator.SM,
@@ -51,7 +50,8 @@ const operators: { [key: string]: Operator } = {
 const numericOnlyOperators: GridFilterOperator[] =
   getGridNumericOperators().filter(
     (operator) =>
-      operator.label && Object.keys(operators).includes(operator.label)
+      operator.label &&
+      Object.keys(dataGridOperatorsMapping).includes(operator.label)
   );
 
 const columns: GridColDef[] = [
@@ -104,7 +104,7 @@ const columns: GridColDef[] = [
     type: 'number',
     renderCell: HealthScoreRenderCell,
     filterOperators: numericOnlyOperators,
-    width: 160,
+    width: 150,
   },
   {
     field: 'crossCurrencyRisk',
@@ -115,7 +115,7 @@ const columns: GridColDef[] = [
   {
     field: 'tag',
     headerName: 'Tag',
-    width: 160,
+    width: 150,
     renderCell: AccountTagRenderCell,
     filterable: false,
     sortable: false,
@@ -169,26 +169,16 @@ export default function AccountsTable() {
     });
   }, [simulatedPriceOracles]);
 
-  const variables = createAccountsQueryVariables({
-    ...accountsQueryParams,
-    pageNumber: Math.floor(tablePageNumber / pagesPerQuery) + 1,
-    pageSize: tablePageSize * pagesPerQuery,
-  });
-  const { data } = useQuery<AccountsQueryResponse>(ACCOUNTS_QUERY, {
-    variables,
+  const { data, loading } = useQuery<AccountsQueryResponse>(ACCOUNTS_QUERY, {
+    variables: createAccountsQueryVariables({
+      ...accountsQueryParams,
+      pageSize: tablePageSize * pagesPerQuery,
+      pageNumber: Math.floor(tablePageNumber / pagesPerQuery) + 1,
+    }),
   });
 
-  // const rows = data?.accounts || [];
   const openAccount = (account: Account) => {
     window.open(`/accounts/${account.id}`, '_blank');
-  };
-
-  const handlePageChange = (page: number) => {
-    setTablePageNumber(page);
-  };
-
-  const handlePageSizeChange = (pageSize: number) => {
-    setTablePageSize(pageSize);
   };
 
   const handleFilterModelChange = (model: GridFilterModel) => {
@@ -201,20 +191,15 @@ export default function AccountsTable() {
         return;
       }
 
-      const fieldType = (
-        fieldTypes as {
-          [key: string]: FieldType;
-        }
-      )[item.columnField];
-      const operator = operators[item.operatorValue || ''];
+      const fieldType = fieldTypes[item.columnField as keyof typeof fieldTypes];
+      const operator = dataGridOperatorsMapping[item.operatorValue || ''];
 
       switch (fieldType) {
         case FieldType.BIG_INT:
           if (!operator) {
             break;
           }
-          filter.bigintFilters = filter.bigintFilters || [];
-          filter.bigintFilters.push({
+          filter.bigintFilters = (filter.bigintFilters || []).concat({
             field,
             operator,
             value: new UsdAmount(Number(value)).n.toString(),
@@ -224,28 +209,20 @@ export default function AccountsTable() {
           if (!operator) {
             break;
           }
-          filter.floatFilters = filter.floatFilters || [];
-          filter.floatFilters.push({
+          filter.floatFilters = (filter.floatFilters || []).concat({
             field,
             operator,
             value: Number(value),
           });
           break;
         case FieldType.BOOLEAN:
-          filter.boolFilters = filter.boolFilters || [];
-          filter.boolFilters.push({
+          filter.boolFilters = (filter.boolFilters || []).concat({
             field,
             value: value === 'true',
           });
           break;
         case FieldType.STRING:
-          filter.stringFilters =
-            filter.stringFilters ||
-            new Array<{
-              field: string;
-              contains: string;
-            }>();
-          filter.stringFilters.push({
+          filter.stringFilters = (filter.stringFilters || []).concat({
             field,
             contains: value,
           });
@@ -257,7 +234,7 @@ export default function AccountsTable() {
 
     setAccountsQueryParams({
       ...accountsQueryParams,
-      filter,
+      filter: Object.keys(filter).length > 0 ? filter : undefined,
       search,
     });
   };
@@ -290,12 +267,6 @@ export default function AccountsTable() {
       sortDirection = 'DESC';
     }
 
-    if (sortDirection === undefined) {
-      const { sortDirection: _, ...rest } = accountsQueryParams;
-      setAccountsQueryParams(rest);
-      return;
-    }
-
     setAccountsQueryParams({
       ...accountsQueryParams,
       sortBy,
@@ -303,9 +274,9 @@ export default function AccountsTable() {
     });
   };
 
-  const { accounts, totalPages, totalEntries } = data
+  const { accounts, totalEntries } = data
     ? parseAccountsQueryResponse(data)
-    : { accounts: [], totalPages: 0, totalEntries: 0 };
+    : { accounts: [], totalEntries: 0 };
 
   const rows = accounts.slice(
     (tablePageNumber % pagesPerQuery) * tablePageSize,
@@ -323,12 +294,12 @@ export default function AccountsTable() {
         paginationMode="server"
         filterMode="server"
         sortingMode="server"
-        loading={accounts.length === 0}
+        loading={loading}
         rowCount={totalEntries}
         pageSize={tablePageSize}
         page={tablePageNumber}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
+        onPageChange={setTablePageNumber}
+        onPageSizeChange={setTablePageSize}
         onFilterModelChange={handleFilterModelChange}
         onSortModelChange={handleSortModelChange}
         initialState={{
@@ -339,7 +310,10 @@ export default function AccountsTable() {
             },
           },
         }}
-        components={{ Toolbar: QuickSearchToolbar }}
+        components={{
+          Toolbar: QuickSearchToolbar,
+          LoadingOverlay: LinearProgress,
+        }}
       />
     </div>
   );

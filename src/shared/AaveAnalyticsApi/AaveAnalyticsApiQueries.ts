@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { CurrencyAmount } from "../CurrencyAmount";
 import { UsdAmount } from "../UsdAmount";
 import { Token } from "./AaveAnalyticsApi.type";
 
