@@ -11,7 +11,7 @@ export const cacheConfig = {
             '$sortDirection',
             '$filter',
             '$search',
-            '$simulatedPriceOracles',
+            '$simulatedTokenPrices',
           ],
           merge(
             existing: AccountsGraphQLSchemaType | undefined,
