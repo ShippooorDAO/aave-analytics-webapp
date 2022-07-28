@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from '@mui/icons-material/Menu';
+import * as featureFlags from '@/shared/FeatureFlags';
 import Link from 'next/link';
 
 const Navbar = ({ children }: { children: ReactNode }) => {
@@ -41,19 +42,22 @@ const Navbar = ({ children }: { children: ReactNode }) => {
               <li>
                 <a href="/token">AAVE Token</a>
               </li>
-              <li>
-                <a
-                  onClick={() =>
-                    setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
-                  }
-                >
-                  {resolvedTheme === 'light' ? (
-                    <DarkModeIcon />
-                  ) : (
-                    <LightModeIcon />
-                  )}
-                </a>
-              </li>
+
+              {featureFlags.darkModeSupportEnabled && (
+                <li>
+                  <a
+                    onClick={() =>
+                      setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
+                    }
+                  >
+                    {resolvedTheme === 'light' ? (
+                      <DarkModeIcon />
+                    ) : (
+                      <LightModeIcon />
+                    )}
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>
