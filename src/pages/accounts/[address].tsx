@@ -20,6 +20,7 @@ import {
   createAccountQueryVariables,
 } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiQueries';
 import { useSimulatedPriceOracleContext } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
+import { accountTransactionsEnabled } from '@/shared/FeatureFlags';
 
 const AccountPage = () => {
   const router = useRouter();
@@ -184,12 +185,14 @@ const AccountDetail = ({ id }: { id: string }) => {
             />
           </div>
         </div>
-        <div className="p-4 rounded-lg shadow-lg md:col-span-2">
-          <span className="font-bold">Transactions</span>
-          <div className="h-96 w-full mt-3">
-            <TransactionsTable accountId={id} />
+        {accountTransactionsEnabled && (
+          <div className="p-4 rounded-lg shadow-lg md:col-span-2">
+            <span className="font-bold">Transactions</span>
+            <div className="h-96 w-full mt-3">
+              <TransactionsTable accountId={id} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

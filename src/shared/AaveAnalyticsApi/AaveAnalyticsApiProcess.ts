@@ -114,19 +114,35 @@ export function parseTransactionBaseResponse(
   };
 }
 
-export function parseTransactionsQueryResponse(response: TransactionsQueryResponse, tokens: Token[]): Transaction[] {
-    return response.transactions.map((transaction) => ({
-      ...parseTransactionBaseResponse(transaction, tokens)
-    }));
+export function parseTransactionsQueryResponse(
+  response: TransactionsQueryResponse,
+  tokens: Token[]
+): Transaction[] {
+  return response.transactions.map((transaction) => ({
+    ...parseTransactionBaseResponse(transaction, tokens),
+  }));
 }
+
 
 export function parseLiquidationsQueryResponse(
   response: LiquidationsQueryResponse, tokens: Token[]
-): Liquidation[] {
-  return response.liquidations.map((liquidation) => ({
-    ...liquidation,
-    ...parseTransactionBaseResponse(liquidation, tokens),
-    penaltyPaid: parseTokenAmount(liquidation.tokenId, liquidation.penaltyPaid, tokens),
-    penaltyPaidUsd: parseUsdAmount(liquidation.penaltyPaidUsd),
-  }));
+): {totalEntries: number, totalPages: number, liquidations: Liquidation[]}{
+  return {
+    ...response.liquidations,
+    liquidations: response.liquidations.liquidations.map((liquidation) => ({
+      ...liquidation,
+      accountId: liquidation.account.id,
+      collateralToken: tokens.find(
+        (token) =>
+          token.symbol === liquidation.collateralToken.symbol
+      )!,
+      principalToken: tokens.find(
+        (token) =>
+          token.symbol === liquidation.principalToken.symbol
+      )!,
+      penaltyPaidUsd: new UsdAmount(liquidation.penaltyPaidUsd),
+      amountLiquidatedUsd: new UsdAmount(liquidation.amountLiquidatedUsd),
+      timestamp: new Date(liquidation.timestamp * 1000),
+    })),
+  };
 }

@@ -152,3 +152,52 @@ export const ACCOUNT_QUERY = gql`
     }
   }
 `;
+
+export interface LiquidationsQueryParams {
+  sortBy?: string;
+  sortDirection?: SortDirection;
+  pageNumber?: number;
+  pageSize?: number;
+  filter?: Filters;
+  search?: string;
+}
+
+export const LIQUIDATIONS_QUERY = gql`
+  query getLiquidations(
+    $sortBy: String
+    $sortDirection: SortDirection
+    $pageNumber: Int
+    $pageSize: Int
+    $filter: Filter
+    $search: String
+  ) {
+    liquidations(
+      pageNumber: $pageNumber
+      pageSize: $pageSize
+      search: $search
+      sortBy: $sortBy
+      sortDirection: $sortDirection
+      filter: $filter
+    ) {
+      totalPages
+      totalEntries
+      liquidations {
+        id
+        account {
+          id
+        }
+        collateralToken {
+          symbol
+        }
+        penaltyPaidUsd
+        amountLiquidatedUsd
+        principalToken {
+          symbol
+        }
+        timestamp
+        liquidator
+        transactionHash
+      }
+    }
+  }
+`;

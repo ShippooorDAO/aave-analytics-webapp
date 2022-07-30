@@ -39,10 +39,16 @@ export interface Transaction {
   timestamp: Date;
 } 
 
-export interface Liquidation extends Transaction {
-  penaltyPaid: TokenAmount | null;
+export interface Liquidation {
+  id: string;
+  collateralToken: Token;
+  principalToken: Token;
+  accountId: string;
+  liquidator: string;
+  amountLiquidatedUsd: UsdAmount;
   penaltyPaidUsd: UsdAmount;
-  liquidatedAccountId: string;
+  transactionHash: string;
+  timestamp: Date;
 }
 
 export enum TransactionType {
@@ -113,15 +119,37 @@ export interface TransactionBaseResponse {
   timestamp: number;
 }
 
-export interface LiquidationsQueryResponse {
-  liquidations: (TransactionBaseResponse &
-    {
-      liquidatedAccountId: string;
-      penaltyPaid: string;
-      penaltyPaidUsd: string;
-    })[];
+export interface TransactionsQueryResponse {
+  transactions: TransactionBaseResponse[];
 }
+
 
 export interface TransactionsQueryResponse {
   transactions: TransactionBaseResponse[];
+}
+
+export interface LiquidationsGraphQLSchema {
+  totalEntries: number;
+  totalPages: number;
+  liquidations: Array<{
+    id: string;
+    collateralToken: {
+      symbol: string;
+    };
+    principalToken: {
+      symbol: string;
+    };
+    account: {
+      id: string;
+    };
+    liquidator: string;
+    penaltyPaidUsd: string;
+    amountLiquidatedUsd: string;
+    timestamp: number;
+    transactionHash: string;
+  }>;
+}
+
+export interface LiquidationsQueryResponse {
+  liquidations: LiquidationsGraphQLSchema;
 }
