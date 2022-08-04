@@ -2,7 +2,7 @@
   "liquidations": [
     {
       "id": "0x544337d52ec097803e6079a74ad85b478ff94f48860c6df1c991416617d8bd87",
-      "txHash": "0x544337d52ec097803e6079a74ad85b478ff94f48860c6df1c991416617d8bd87",
+      "transactionHash": "0x544337d52ec097803e6079a74ad85b478ff94f48860c6df1c991416617d8bd87",
       "txType": "liquidate",
       "tokenId": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       "amount": "4530123000000000000000000",
