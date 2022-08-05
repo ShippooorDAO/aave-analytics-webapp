@@ -120,7 +120,7 @@ const AccountDetail = ({ id }: { id: string }) => {
             </Button>
             <img
               onClick={() =>
-                window.open(`https://etherscan.io/address/${address}`)
+                window.open(`https://etherscan.io/address/${account.address}`)
               }
               className="btn btn-circle btn-ghost btn-sm inline h-6 bg-white m-0 cursor-pointer"
               src="/assets/images/etherscan.svg"

@@ -178,7 +178,7 @@ export default function AccountsTable() {
   });
 
   const openAccount = (account: Account) => {
-    window.open(`/accounts/${account.id}`, '_blank');
+    window.open(`/accounts/${account.address}`, '_blank');
   };
 
   const handleFilterModelChange = (model: GridFilterModel) => {

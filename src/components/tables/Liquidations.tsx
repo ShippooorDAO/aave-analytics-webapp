@@ -138,7 +138,7 @@ export default function LiquidationsTable() {
   );
 
   const openTransaction = (transaction: Transaction) => {
-    window.open(`https://etherscan.io/tx/${transaction.id}`, '_blank');
+    window.open(`https://etherscan.io/tx/${transaction.txHash}`, '_blank');
   };
 
   const handleFilterModelChange = (model: GridFilterModel) => {
