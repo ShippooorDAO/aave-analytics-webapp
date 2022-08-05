@@ -142,6 +142,7 @@ export function parseLiquidationsQueryResponse(
       )!,
       penaltyPaidUsd: new UsdAmount(liquidation.penaltyPaidUsd),
       amountLiquidatedUsd: new UsdAmount(liquidation.amountLiquidatedUsd),
+      txHash: liquidation.transactionHash,
       timestamp: new Date(liquidation.timestamp * 1000),
     })),
   };
