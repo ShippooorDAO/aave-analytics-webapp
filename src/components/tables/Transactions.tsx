@@ -70,15 +70,9 @@ function QuickSearchToolbar() {
   );
 }
 
-export interface TransactionsTableProps {
-  accountId?: string;
-}
-
 const NoTransactionsOverlay = () => <NoRowsOverlay text="No transactions" />;
 
-export default function TransactionsTable({
-  accountId,
-}: TransactionsTableProps) {
+export default function TransactionsTable() {
   const [transactions, setTransactions] = useState<Transaction[] | null>(null);
   const { tokens } = useAaveAnalyticsApiContext();
   const loading = transactions === null;

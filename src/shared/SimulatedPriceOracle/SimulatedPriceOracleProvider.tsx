@@ -1,6 +1,5 @@
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
 import { Token } from '../AaveAnalyticsApi/AaveAnalyticsApi.type';
-import { UsdAmount } from '../UsdAmount';
 
 import {
   SimulatedPriceOracle,

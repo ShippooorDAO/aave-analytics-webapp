@@ -2,7 +2,6 @@ import {
   Token,
   TransactionType,
 } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
-import TokenAmount from '@/shared/TokenAmount';
 import {
   GridRenderCellParams,
   GridValueFormatterParams,

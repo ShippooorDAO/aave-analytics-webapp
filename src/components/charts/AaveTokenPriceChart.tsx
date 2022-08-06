@@ -108,7 +108,7 @@ async function fetchAavePrice(timeWindow: string) {
 }
 
 function formatAaveTokenPrices(AaveTokenPrices: AaveTokenPricesProps) {
-  return AaveTokenPrices.map((x) => ({ timestamp: x[0] / 1000, value: x[1] }));
+  return AaveTokenPrices.map((x) => ({ timestamp: x[0]! / 1000, value: x[1] }));
 }
 
 export const AaveTokenPriceChart = () => {

@@ -189,7 +189,7 @@ const AccountDetail = ({ id }: { id: string }) => {
           <div className="p-4 rounded-lg shadow-lg md:col-span-2">
             <span className="font-bold">Transactions</span>
             <div className="h-96 w-full mt-3">
-              <TransactionsTable accountId={id} />
+              <TransactionsTable />
             </div>
           </div>
         )}

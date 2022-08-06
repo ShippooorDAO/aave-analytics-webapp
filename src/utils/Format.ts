@@ -77,7 +77,7 @@ export function format(
   if (abbreviate && value >= 1000) {
     roundedLocalizedValue = numberAbbreviate(value, decimals);
   } else if (value instanceof BigNumber) {
-    roundedLocalizedValue = toDisplayString(value);
+    roundedLocalizedValue = toDisplayString(value, decimals);
   } else {
     roundedLocalizedValue = value.toLocaleString(undefined, {
       minimumFractionDigits: decimals,

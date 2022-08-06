@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { format } from '@/utils/Format';
 
 type AaveTokenParametersProps = {
+  price: number;
   marketCap: number;
   totalValueLocked: number;
   fullyDilutedValuation: number;
