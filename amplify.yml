@@ -3,10 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        - yarn install
     build:
       commands:
-        - npm run build
+        - yarn run build
         - echo "NEXT_PUBLIC_AAVE_ANALYTICS_API_URL=$NEXT_PUBLIC_AAVE_ANALYTICS_API_URL" >> .env.local
         - echo "NEXT_PUBLIC_DARK_MODE_SUPPORT_ENABLED=$NEXT_PUBLIC_DARK_MODE_SUPPORT_ENABLED" >> .env.local
         - echo "NEXT_PUBLIC_ACCOUNT_TRANSACTIONS_ENABLED=$NEXT_PUBLIC_ACCOUNT_TRANSACTIONS_ENABLED" >> .env.local
