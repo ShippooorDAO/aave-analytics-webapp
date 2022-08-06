@@ -11,7 +11,7 @@ import {
   TokenRenderCell,
   TransactionTypeFormatter,
 } from '@/utils/DataGrid';
-import MockTransactionsQueryResponse from '@/shared/AaveAnalyticsApi/mocks/TransactionsQueryResponse.json';
+import MockTransactionsQueryResponse from '../../shared/AaveAnalyticsApi/Mocks/TransactionsQueryResponse.json'
 import { parseTransactionsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
 import { Transaction } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { useEffect, useState } from 'react';
