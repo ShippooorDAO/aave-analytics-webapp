@@ -1,0 +1,7 @@
+customHeaders:
+  - pattern: "**/*"
+    headers:
+      - key: Access-Control-Allow-Origin
+        value: "*"
+      - key: Access-Control-Allow-Method
+        value: "*"

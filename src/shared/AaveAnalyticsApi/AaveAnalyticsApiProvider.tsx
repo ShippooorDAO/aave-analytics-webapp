@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import {
   createContext,
   FC,
@@ -35,9 +35,14 @@ export const useAaveAnalyticsApiContext = () =>
 export const AaveAnalyticsApiProvider: FC<AaveAnalyticsApiProviderProps> = ({
   children,
 }: AaveAnalyticsApiProviderProps) => {
-  const apolloClient = new ApolloClient({
+  const link = createHttpLink({
     uri: process.env.NEXT_PUBLIC_AAVE_ANALYTICS_API_URL,
+    credentials: 'same-origin'
+  });
+
+  const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
+    link
   });
 
   const [tokens, setTokens] = useState<Token[]>([]);
