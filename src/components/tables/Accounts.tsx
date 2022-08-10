@@ -177,10 +177,6 @@ export default function AccountsTable() {
     }),
   });
 
-  const openAccount = (account: Account) => {
-    window.open(`/accounts/${account.address}`, '_blank');
-  };
-
   const handleFilterModelChange = (model: GridFilterModel) => {
     const filter: Filters = {};
 
@@ -288,7 +284,6 @@ export default function AccountsTable() {
       <DataGrid
         rows={rows}
         columns={columns}
-        onRowClick={({ row }) => openAccount(row)}
         rowsPerPageOptions={[tablePageSize]}
         getRowClassName={() => 'cursor-pointer'}
         paginationMode="server"
