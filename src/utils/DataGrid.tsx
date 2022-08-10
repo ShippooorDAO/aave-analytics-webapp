@@ -83,7 +83,7 @@ export function AccountAddressRenderCell(params: GridRenderCellParams<string>) {
     return '';
   }
   return (
-    <Link href={`/accounts/${params.value}`}>
+    <a href={`/accounts/${params.value}`} target="_blank">
       <div className="cursor-pointer">
         <Blockies
           className="m-3 ml-0 rounded-full inline"
@@ -93,7 +93,7 @@ export function AccountAddressRenderCell(params: GridRenderCellParams<string>) {
         />
         <span>{getAccountShorthand(params.value)}</span>
       </div>
-    </Link>
+    </a>
   );
 }
 
