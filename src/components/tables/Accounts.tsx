@@ -17,10 +17,7 @@ import {
 } from '@/utils/DataGrid';
 import { PriceOracleSimulatorPanel } from '../PriceOracleSimulatorPanel';
 import { parseAccountsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiProcess';
-import {
-  Account,
-  AccountsQueryResponse,
-} from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
+import { AccountsQueryResponse } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { useSimulatedPriceOracleContext } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
 import { useEffect, useState } from 'react';
 import {

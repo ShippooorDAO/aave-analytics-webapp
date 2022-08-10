@@ -12,7 +12,6 @@ import { getAccountShorthand } from './Format';
 import { getIconForSymbol } from './Visuals';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
 import { CurrencyAmount } from '@/shared/CurrencyAmount';
-import Link from 'next/link';
 
 export function PercentageGridValueFormatter(
   params: GridValueFormatterParams<number>
