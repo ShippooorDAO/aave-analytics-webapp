@@ -105,7 +105,7 @@ const AccountDetail = ({ id }: { id: string }) => {
             <div className="flex flex-col items-start gap-1">
               <div>
                 {account?.tag && (
-                  <Badge className="badge-accent badge-lg font-bold text-lg">
+                  <Badge className="badge-accent badge-lg font-bold text-lg h-auto text-center">
                     {account.tag}
                   </Badge>
                 )}
