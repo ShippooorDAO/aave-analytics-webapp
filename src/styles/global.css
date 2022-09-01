@@ -70,6 +70,6 @@ a:hover {
   @apply text-base-content border-base-content border-opacity-20;
 }
 
-button, [type='button'] {
+button, [type='button'], .MuiDataGrid-booleanCell {
   @apply text-base-content;
 }
