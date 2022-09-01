@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import CoinGecko from 'coingecko-api';
 import { format } from '@/utils/Format';
+import { useTheme } from 'next-themes';
 
 type AaveTokenPricesProps = Array<Array<number>>;
 
@@ -30,6 +31,8 @@ const AaveTokenPriceChartTemplate = ({
   width,
   height,
 }: AaveTokenPriceChartProps) => {
+  const { resolvedTheme } = useTheme();
+
   const handleTimeWindow = (event: any) => {
     if (event.target.value) {
       setTimeWindow(event.target.value);
@@ -37,20 +40,23 @@ const AaveTokenPriceChartTemplate = ({
   };
 
   return (
-    <div className="flex flex-col items-end">
-      <div className="btn-group mb-2" onChange={handleTimeWindow}>
-        {timeWindows.map((w, i) => (
-          <input
-            key={i}
-            id={w}
-            checked={timeWindow === w}
-            value={w}
-            type="radio"
-            name="options"
-            data-title={w}
-            className="btn"
-          />
-        ))}
+    <div className="flex flex-col">
+      <div className="flex justify-between">
+        <div className="px-4 py-2">Price over time</div>
+        <div className="btn-group m-2" onChange={handleTimeWindow}>
+          {timeWindows.map((w, i) => (
+            <input
+              key={i}
+              id={w}
+              checked={timeWindow === w}
+              value={w}
+              type="radio"
+              name="options"
+              data-title={w}
+              className="btn"
+            />
+          ))}
+        </div>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
@@ -59,18 +65,31 @@ const AaveTokenPriceChartTemplate = ({
           data={data}
           margin={{ top: 3, right: 0, left: 1, bottom: 0 }}
         >
+          <defs>
+            <linearGradient id="colorArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <XAxis
-            padding={{ left: 0 }}
-            dy={1}
-            interval="preserveStartEnd"
-            type="number"
-            domain={['dataMin', 'dataMax']}
             dataKey="timestamp"
-            tickFormatter={(value) =>
-              `    ${moment(value, 'X').format('MMM DD YYYY')}    `
+            style={{ fill: resolvedTheme === 'light' ? '#000000' : '#FFFFFF' }}
+            opacity={0.5}
+            tickFormatter={(value: string) =>
+              `    ${moment(value, 'X').format('DD MMM YYYY')}    `
             }
           />
-          <YAxis interval="preserveEnd" dx={3} type="number" mirror />
+          <YAxis
+            style={{ fill: resolvedTheme === 'light' ? '#000000' : '#FFFFFF' }}
+            orientation="left"
+            type="number"
+            mirror
+            interval="preserveStartEnd"
+            opacity={0.5}
+            tickFormatter={(value) =>
+              value > 0 ? format(value, { abbreviate: true }) : ''
+            }
+          />
           <Tooltip
             labelFormatter={(label) => new Date(label * 1000).toLocaleString()}
             formatter={(label: string) =>
@@ -81,8 +100,9 @@ const AaveTokenPriceChartTemplate = ({
             strokeWidth={3}
             type="monotone"
             dataKey="value"
-            stroke="#607aee"
-            fillOpacity={0.4}
+            stroke="#8884d8"
+            fillOpacity={0.5}
+            fill="url(#colorArea)"
           />
         </AreaChart>
       </ResponsiveContainer>

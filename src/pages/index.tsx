@@ -1,3 +1,4 @@
+import { Card } from '@/components/cards/Card';
 import Accounts from '@/components/tables/Accounts';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
@@ -11,10 +12,11 @@ const Index = () => {
           description="Deep dive analytics dashboard for AAVE"
         />
       }
+      breadcrumbs={[{ title: 'Accounts', uri: '/' }]}
     >
-      <section className="w-full h-full p-4">
+      <Card>
         <Accounts />
-      </section>
+      </Card>
     </Main>
   );
 };

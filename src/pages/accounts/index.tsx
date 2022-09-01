@@ -1,8 +1,9 @@
+import { Card } from '@/components/cards/Card';
 import Accounts from '@/components/tables/Accounts';
 import { Meta } from '@/layouts/Meta';
-import Main from '@/templates/Main';
+import { Main } from '@/templates/Main';
 
-const AccountsIndex = () => {
+const Index = () => {
   return (
     <Main
       meta={
@@ -11,14 +12,13 @@ const AccountsIndex = () => {
           description="Deep dive analytics dashboard for AAVE"
         />
       }
-      breadcrumbs={[
-        { title: 'Overview', uri: '/' },
-        { title: 'Accounts', uri: '/accounts' },
-      ]}
+      breadcrumbs={[{ title: 'Accounts', uri: '/' }]}
     >
-      <Accounts />
+      <Card>
+        <Accounts />
+      </Card>
     </Main>
   );
 };
 
-export default AccountsIndex;
+export default Index;

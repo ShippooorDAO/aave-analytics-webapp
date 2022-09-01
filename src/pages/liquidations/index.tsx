@@ -1,3 +1,4 @@
+import { Card } from '@/components/cards/Card';
 import LiquidationsTable from '@/components/tables/Liquidations';
 import { Meta } from '@/layouts/Meta';
 import Main from '@/templates/Main';
@@ -12,16 +13,13 @@ const LiquidationsIndex = () => {
         />
       }
       breadcrumbs={[
-        { title: 'Overview', uri: '/' },
+        { title: 'Accounts', uri: '/' },
         { title: 'Liquidations', uri: '/liquidations' },
       ]}
     >
-      <section
-        id="overview"
-        className="relative rounded-xl overflow-auto p-8 pt-0 w-full h-full"
-      >
+      <Card>
         <LiquidationsTable />
-      </section>
+      </Card>
     </Main>
   );
 };

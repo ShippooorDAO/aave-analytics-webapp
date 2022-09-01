@@ -7,7 +7,7 @@ class MyDocument extends Document {
   // eslint-disable-next-line class-methods-use-this
   render() {
     return (
-      <Html data-theme="light" lang={AppConfig.locale}>
+      <Html lang={AppConfig.locale}>
         <Head />
         <body>
           <Main />

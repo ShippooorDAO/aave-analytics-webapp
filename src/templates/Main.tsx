@@ -16,7 +16,7 @@ export const Main = (props: IMainProps) => (
     {props.meta}
     <Navbar>
       <>
-        <div className="relative">
+        <div className="relative bg-[url('/assets/images/background-50.png')] bg-opacity-50 bg-no-repeat bg-fixed">
           <div className="py-4 px-8">
             {props.breadcrumbs && <Breadcrumbs links={props.breadcrumbs} />}
           </div>

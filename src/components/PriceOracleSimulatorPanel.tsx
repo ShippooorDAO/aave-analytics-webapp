@@ -2,11 +2,11 @@ import { Token } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApi.type';
 import { useSimulatedPriceOracleContext } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracleProvider';
 import { useEffect, useState } from 'react';
 import { Button, Table } from 'react-daisyui';
-import TokenChip from './TokenChip';
 import NoRowsOverlay from './tables/NoRowsOverlay';
 import { TokenSelect } from './TokenSelect/TokenSelect';
 import { UsdAmount } from '@/shared/UsdAmount';
 import { SimulatedPriceOracle } from '@/shared/SimulatedPriceOracle/SimulatedPriceOracle.type';
+import { TokenChip } from './badges/TokenChip';
 
 export const PriceOracleSimulatorPanel = () => {
   const {
@@ -96,7 +96,7 @@ export const PriceOracleSimulatorPanel = () => {
       </label>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box max-w-5xl">
+        <div className="modal-box max-w-5xl max-h-[90%]">
           <label
             htmlFor="my-modal"
             className="btn btn-sm btn-circle absolute right-2 top-2  "
@@ -123,7 +123,7 @@ export const PriceOracleSimulatorPanel = () => {
                 {tokenRows.map((token: Token) => (
                   <Table.Row id={token.id}>
                     <span className="z-0">
-                      <TokenChip token={token} />
+                      <TokenChip symbol={token.symbol} />
                     </span>
                     <span>
                       <input

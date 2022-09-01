@@ -32,7 +32,7 @@ a:hover {
   * Material UI DataGrid
   */
 .MuiDataGrid-root {
-  @apply text-base-content border-base-content border-opacity-20 !important;
+  @apply text-base-content border-none !important;
 
   .MuiFormControl-root,
   .MuiInput-root,

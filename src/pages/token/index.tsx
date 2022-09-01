@@ -5,6 +5,8 @@ import Main from '@/templates/Main';
 import CoinGecko from 'coingecko-api';
 import { useEffect, useState } from 'react';
 import { format } from '@/utils/Format';
+import { ValueCard } from '@/components/cards/ValueCard';
+import { Card } from '@/components/cards/Card';
 
 type AaveTokenParametersProps = {
   price: number;
@@ -30,13 +32,6 @@ type AaveTokenTemplateProps = {
   maxSupply: number;
 };
 
-const CountCard = ({ title, amount }: { title: string; amount: string }) => (
-  <div className="rounded-xl shadow-md p-2">
-    <div>{title}</div>
-    <div className="font-bold">{amount}</div>
-  </div>
-);
-
 function AaveTokenTemplate({
   price,
   marketCap,
@@ -50,40 +45,46 @@ function AaveTokenTemplate({
 }: AaveTokenTemplateProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="col-span-2 rounded-xl shadow-md p-2">
-        <div className="font-bold">Price over time</div>
-        <AaveTokenPriceChart />
+      <div className="col-span-2 text-5xl font-bold">
+        <img
+          className="rounded-full h-24 w-24 inline mr-5 shadow-xl"
+          src="/assets/images/tokens/aave.svg"
+        />
+        <p className="drop-shadow-xl inline">AAVE</p>
       </div>
-      <CountCard
-        title="Current Token Price"
-        amount={format(price, { symbol: 'USD' })}
-      />
-      <CountCard
-        title="Market Capitalization"
-        amount={format(marketCap, { symbol: 'USD' })}
-      />
-      <CountCard
-        title="Fully Diluted Valuation"
-        amount={format(fullyDilutedValuation, { symbol: 'USD' })}
-      />
-      <CountCard
-        title="Total Value Locked (TVL)"
-        amount={format(totalValueLocked, { symbol: 'USD' })}
-      />
-      <CountCard
+      <ValueCard title="Current Token Price">
+        {format(price, { symbol: 'USD' })}
+      </ValueCard>
+      <ValueCard title="Total Value Locked (TVL)">
+        {format(totalValueLocked, { symbol: 'USD', abbreviate: true })}
+      </ValueCard>
+      <Card className="col-span-2">
+        <AaveTokenPriceChart />
+      </Card>
+      <ValueCard title="Market Capitalization" variant="secondary">
+        {format(marketCap, { symbol: 'USD', abbreviate: true })}
+      </ValueCard>
+      <ValueCard title="Fully Diluted Valuation" variant="secondary">
+        {format(fullyDilutedValuation, { symbol: 'USD', abbreviate: true })}
+      </ValueCard>
+      <ValueCard
         title="Fully Diluted Valuation / TVL Ratio"
-        amount={format(fullyDilutedValueOnTVL, {})}
-      />
-      <CountCard
-        title="Market Cap / TVL Ratio"
-        amount={format(marketCapOnTVL, {})}
-      />
-      <CountCard
-        title="Circulating Supply"
-        amount={format(circulatingSupply, {})}
-      />
-      <CountCard title="Total Supply" amount={format(totalSupply, {})} />
-      <CountCard title="Max Supply" amount={format(maxSupply, {})} />
+        variant="secondary"
+      >
+        {format(fullyDilutedValueOnTVL, {})}
+      </ValueCard>
+      <ValueCard title="Market Cap / TVL Ratio" variant="secondary">
+        {format(marketCapOnTVL, {})}
+      </ValueCard>
+      <ValueCard title="Circulating Supply" variant="secondary">
+        {format(circulatingSupply, { abbreviate: true })}
+      </ValueCard>
+      <ValueCard title="Total Supply" variant="secondary">
+        {format(totalSupply, { abbreviate: true })}
+      </ValueCard>
+      <ValueCard title="Max Supply" variant="secondary">
+        {format(maxSupply, { abbreviate: true })}
+      </ValueCard>
     </div>
   );
 }
@@ -145,7 +146,7 @@ const TokenIndex = () => {
         />
       }
       breadcrumbs={[
-        { title: 'Overview', uri: '/' },
+        { title: 'Accounts', uri: '/' },
         { title: 'AAVE Token', uri: '/token' },
       ]}
     >

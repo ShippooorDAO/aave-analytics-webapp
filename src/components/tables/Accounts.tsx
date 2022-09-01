@@ -101,7 +101,7 @@ const columns: GridColDef[] = [
     type: 'number',
     renderCell: HealthScoreRenderCell,
     filterOperators: numericOnlyOperators,
-    width: 150,
+    width: 125,
   },
   {
     field: 'crossCurrencyRisk',
@@ -123,6 +123,7 @@ function QuickSearchToolbar() {
   return (
     <div className="p-4 grid grid-cols-1 grid-flow-row-dense md:grid-cols-3 gap-4 justify-between">
       <GridToolbarQuickFilter
+        style={{ color: 'white !important' }}
         className="justify-self-stretch"
         quickFilterParser={(searchInput: string) =>
           searchInput

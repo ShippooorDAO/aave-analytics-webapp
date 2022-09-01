@@ -9,9 +9,9 @@ import {
 import { Badge } from 'react-daisyui';
 import Blockies from 'react-blockies';
 import { getAccountShorthand } from './Format';
-import { getIconForSymbol } from './Visuals';
 import HealthFactorBadge from '@/components/HealthFactorBadge';
 import { CurrencyAmount } from '@/shared/CurrencyAmount';
+import { TokenChip } from '@/components/badges/TokenChip';
 
 export function PercentageGridValueFormatter(
   params: GridValueFormatterParams<number>
@@ -48,16 +48,7 @@ export function TokenRenderCell(params: GridRenderCellParams<Token>) {
   if (!params.value) {
     return 'Unknown';
   }
-  const iconImageUri = getIconForSymbol(params.value.symbol.toLowerCase());
-  if (iconImageUri) {
-    return (
-      <Badge className="badge-outline h-8">
-        <img className="h-6 mr-3" src={iconImageUri} />
-        <span>{params.value.symbol}</span>
-      </Badge>
-    );
-  }
-  return params.value.symbol;
+  return <TokenChip symbol={params.value.symbol} />;
 }
 
 export function HealthScoreRenderCell(params: GridRenderCellParams<number>) {

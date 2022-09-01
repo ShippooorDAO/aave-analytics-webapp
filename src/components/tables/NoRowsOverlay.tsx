@@ -1,4 +1,5 @@
 import { styled } from '@mui/material';
+import { useTheme } from 'next-themes';
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -25,8 +26,10 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
 }));
 
 export function NoRowsOverlay({ text }: { text: string }) {
+  const { resolvedTheme } = useTheme();
+
   return (
-    <StyledGridOverlay>
+    <StyledGridOverlay className={resolvedTheme === 'dark' ? 'opacity-70' : ''}>
       <svg
         width="120"
         height="100"

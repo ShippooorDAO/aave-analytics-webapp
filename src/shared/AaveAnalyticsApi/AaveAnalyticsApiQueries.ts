@@ -138,6 +138,7 @@ export const ACCOUNT_QUERY = gql`
       maxLtv
       crossCurrencyRisk
       collateralRatio
+      tag
       positions {
         id
         aTokenBalance

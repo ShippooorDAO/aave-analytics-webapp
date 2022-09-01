@@ -19,13 +19,13 @@ function getHealthFactorClass(healthFactor: number) {
   if (healthFactor < 2) {
     return 'bg-red-100';
   }
-  return 'bg-white';
+  return '';
 }
 
 export function HealthFactorBadge({ healthFactor }: { healthFactor: number }) {
   const healthFactorClass = getHealthFactorClass(healthFactor);
   return (
-    <Badge className={`badge-ghost ${healthFactorClass} text-black`}>
+    <Badge className={`badge-ghost ${healthFactorClass} `}>
       {healthFactor.toFixed(2)}
     </Badge>
   );

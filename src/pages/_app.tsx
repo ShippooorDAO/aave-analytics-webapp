@@ -8,7 +8,6 @@ import { SimulatedPriceOracleProvider } from '@/shared/SimulatedPriceOracle/Simu
 import { ApolloProviderProps } from '@apollo/client/react/context';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { cacheConfig } from '@/shared/AaveAnalyticsApi/AaveAnalyticsApiCacheConfig';
-import * as featureFlags from '@/shared/FeatureFlags';
 
 const cache = new InMemoryCache(cacheConfig);
 
@@ -17,9 +16,10 @@ const client = new ApolloClient({
   cache,
 });
 const providers = combineProviders();
-if (featureFlags.darkModeSupportEnabled) {
-  providers.push(ThemeProvider, { attribute: 'data-theme' });
-}
+providers.push(ThemeProvider, {
+  attribute: 'data-theme',
+  defaultTheme: 'dark',
+});
 providers.push(ApolloProvider, { client } as ApolloProviderProps<any>);
 providers.push(AaveAnalyticsApiProvider);
 providers.push(SimulatedPriceOracleProvider);
